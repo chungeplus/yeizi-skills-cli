@@ -1,5 +1,5 @@
 {
-  "name": "yeizi-skills",
+  "name": "yeizi-skills-cli",
   "type": "module",
   "version": "0.1.0",
   "packageManager": "bun@1.3.14",
