@@ -1,0 +1,1 @@
+export { packageJsonSchema } from "./package"

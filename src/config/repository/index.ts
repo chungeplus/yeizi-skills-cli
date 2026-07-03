@@ -1,0 +1,1 @@
+export { remoteRepositoryConfig } from "./remote"

@@ -1,0 +1,1 @@
+export { loadPackageJson } from "./package"

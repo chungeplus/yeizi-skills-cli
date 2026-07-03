@@ -1,0 +1,1 @@
+export { localPlatformConfig } from "./local"
