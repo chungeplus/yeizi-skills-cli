@@ -4,11 +4,17 @@ import type { InstallCommandOption, RawInstallCommandOption } from "@/types/comm
 import type { PlatformItem } from "@/types/platform"
 import type { SkillItem, SkillName } from "@/types/skill"
 
-import { renderSummaryDisplay } from "@/features/display"
+import { renderTableDisplay } from "@/features/display"
 import { buildPlatformList, LocalPlatformService, promptPlatformNameList } from "@/features/platform"
 import { RemoteRepositoryService } from "@/features/repository"
-import { buildSkillList, copySkillListToPlatformList, parseSkillNameList, promptSkillNameList, RemoteSkillService } from "@/features/skill"
-import { buildInstallMessageList } from "@/features/skill/builder"
+import {
+  buildInstalledSkillPlatformTableRowList,
+  buildSkillList,
+  copySkillListToPlatformList,
+  parseSkillNameList,
+  promptSkillNameList,
+  RemoteSkillService,
+} from "@/features/skill"
 
 class InstallCommand {
   public readonly commandName = "install"
@@ -48,12 +54,12 @@ class InstallCommand {
 
       await copySkillListToPlatformList(selectedSkillList, selectedPlatformList)
 
-      const installMessageList = await buildInstallMessageList(selectedSkillList, selectedPlatformList)
+      const installedSkillPlatformTableRowList = await buildInstalledSkillPlatformTableRowList(
+        selectedSkillList,
+        selectedPlatformList,
+      )
 
-      renderSummaryDisplay({
-        title: "安装完成",
-        messageList: installMessageList,
-      })
+      renderTableDisplay("安装完成", installedSkillPlatformTableRowList)
     }
     finally {
       await RemoteSkillService.resetRemoteSkill()
@@ -65,14 +71,12 @@ class InstallCommand {
   }
 
   public register(program: Command): void {
-    const installCommand = program
-      .command(this.commandName)
-      .description(this.commandDescription)
+    const installCommand = program.command(this.commandName).description(this.commandDescription)
 
-    this.commandOptionList.forEach((commandOptionItem) => {
+    this.commandOptionList.forEach((commandOption) => {
       installCommand.option(
-        commandOptionItem.commandOptionFlag,
-        commandOptionItem.commandOptionDescription,
+        commandOption.commandOptionFlag,
+        commandOption.commandOptionDescription,
       )
     })
 

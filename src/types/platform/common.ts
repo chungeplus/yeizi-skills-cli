@@ -13,12 +13,12 @@ interface PlatformItem {
   platformSkillDirectoryPath: PlatformSkillDirectoryPath
 }
 
-type PlatformItemList = PlatformItem[]
+type PlatformList = PlatformItem[]
 
 export type {
   PlatformHomeDirectoryPath,
   PlatformItem,
-  PlatformItemList,
+  PlatformList,
   PlatformName,
   PlatformSkillDirectoryPath,
 }

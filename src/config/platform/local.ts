@@ -7,17 +7,17 @@ const userHomeDirectoryPath = homedir()
 const localPlatformConfig: LocalPlatformConfig = {
   localPlatformList: [
     {
-      localPlatformName: "codex",
+      localPlatformName: "Codex",
       localPlatformHomeDirectoryPath: join(userHomeDirectoryPath, ".codex"),
       localPlatformSkillDirectoryPath: join(userHomeDirectoryPath, ".codex", "skills"),
     },
     {
-      localPlatformName: "claude",
+      localPlatformName: "Claude Code",
       localPlatformHomeDirectoryPath: join(userHomeDirectoryPath, ".claude"),
       localPlatformSkillDirectoryPath: join(userHomeDirectoryPath, ".claude", "skills"),
     },
     {
-      localPlatformName: "trae",
+      localPlatformName: "Trae",
       localPlatformHomeDirectoryPath: join(userHomeDirectoryPath, ".trae"),
       localPlatformSkillDirectoryPath: join(userHomeDirectoryPath, ".trae", "skills"),
     },

@@ -1,9 +1,7 @@
-import type { PlatformItem } from "@/types/platform"
-import type { SkillComparisonRow, SkillComparisonStateType, SkillItem } from "@/types/skill"
+import type { PlatformList } from "@/types/platform"
+import type { SkillItem, SkillList } from "@/types/skill"
 
 import { readdir } from "node:fs/promises"
-
-import { SkillComparisonState } from "@/constants/skill"
 import { RemoteSkillService } from "@/features/skill"
 
 async function buildSkillList(skillNameList: string[]): Promise<SkillItem[]> {
@@ -14,65 +12,42 @@ async function buildSkillList(skillNameList: string[]): Promise<SkillItem[]> {
   return skillList
 }
 
-async function buildInstallMessageList(
-  skillList: SkillItem[],
-  platformList: PlatformItem[],
-): Promise<string[]> {
-  const installMessageList: string[] = []
-
-  for (const platformItem of platformList) {
-    installMessageList.push(
-      `已安装 ${skillList.map(skillItem => skillItem.skillName).join(", ")} 到 ${platformItem.platformName}`,
-    )
-  }
-
-  return installMessageList
-}
-
-async function buildLocalPlatformRemoteSkillComparisonRowList(
-  remoteSkillList: SkillItem[],
-  localPlatformList: PlatformItem[],
-): Promise<SkillComparisonRow[]> {
-  const localPlatformRemoteSkillComparisonRowList: SkillComparisonRow[] = []
-  const remoteSkillNameSet = new Set(remoteSkillList.map(remoteSkillItem => remoteSkillItem.skillName))
-
-  for (const localPlatformItem of localPlatformList) {
-    const localPlatformDirectoryEntryList = await readdir(localPlatformItem.platformSkillDirectoryPath, { withFileTypes: true })
-
-    const localPlatformSkillNameSet = new Set(
-      localPlatformDirectoryEntryList
+async function buildInstalledSkillPlatformTableRowList(
+  skillList: SkillList,
+  platformList: PlatformList,
+): Promise<string[][]> {
+  const platformInstalledSkillNameEntryList = await Promise.all(
+    platformList.map(async ({ platformSkillDirectoryPath, platformName }) => {
+      const platformDirectoryEntryList = await readdir(platformSkillDirectoryPath, { withFileTypes: true })
+      const installedSkillNameList = platformDirectoryEntryList
         .filter(directoryEntryItem => directoryEntryItem.isDirectory())
-        .map(directoryEntryItem => directoryEntryItem.name),
-    )
+        .map(({ name }) => name)
 
-    for (const remoteSkillItem of remoteSkillList) {
-      let localPlatformRemoteSkillComparisonState: SkillComparisonStateType = SkillComparisonState.NOT_INSTALLED
-
-      if (localPlatformSkillNameSet.has(remoteSkillItem.skillName)) {
-        localPlatformRemoteSkillComparisonState = SkillComparisonState.INSTALLED
+      return {
+        platformName,
+        installedSkillNameList,
       }
+    }),
+  )
 
-      localPlatformRemoteSkillComparisonRowList.push({
-        platformName: localPlatformItem.platformName,
-        skillName: remoteSkillItem.skillName,
-        skillComparisonState: localPlatformRemoteSkillComparisonState,
-      })
+  const installedSkillPlatformTableRowList: string[][] = []
+
+  skillList.forEach(({ skillName }) => {
+    const installedPlatformNameList = platformInstalledSkillNameEntryList
+      .filter(({ installedSkillNameList }) => installedSkillNameList.includes(skillName))
+      .map(({ platformName }) => platformName)
+
+    if (installedPlatformNameList.length === 0) {
+      return
     }
 
-    const localPlatformRemoteRemovedSkillNameList = Array.from(localPlatformSkillNameSet).filter(
-      localSkillName => !remoteSkillNameSet.has(localSkillName),
-    )
+    installedSkillPlatformTableRowList.push([skillName, installedPlatformNameList.join(", ")])
+  })
 
-    localPlatformRemoteRemovedSkillNameList.forEach((localPlatformRemoteRemovedSkillName) => {
-      localPlatformRemoteSkillComparisonRowList.push({
-        platformName: localPlatformItem.platformName,
-        skillName: localPlatformRemoteRemovedSkillName,
-        skillComparisonState: SkillComparisonState.REMOTE_REMOVED,
-      })
-    })
-  }
-
-  return localPlatformRemoteSkillComparisonRowList
+  return installedSkillPlatformTableRowList
 }
 
-export { buildInstallMessageList, buildLocalPlatformRemoteSkillComparisonRowList, buildSkillList }
+export {
+  buildInstalledSkillPlatformTableRowList,
+  buildSkillList,
+}

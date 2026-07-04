@@ -1,7 +1,7 @@
 export type {
   PlatformHomeDirectoryPath,
   PlatformItem,
-  PlatformItemList,
+  PlatformList,
   PlatformName,
   PlatformSkillDirectoryPath,
 } from "./common"

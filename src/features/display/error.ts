@@ -8,7 +8,7 @@ function renderErrorDisplay(title: string, message: string): void {
     {
       title: chalk.bold.red(title),
       titleAlignment: "center",
-      padding: { top: 1, bottom: 1, left: 5, right: 5 },
+      padding: { top: 1, bottom: 1, left: 3, right: 3 },
       margin: 1,
       borderStyle: "round",
       borderColor: "red",

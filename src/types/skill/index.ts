@@ -1,5 +1,4 @@
 export type { SkillDescription, SkillItem, SkillList, SkillName } from "./common"
-export type { SkillComparisonRow } from "./comparison"
-export type { SkillComparisonStateType } from "./comparison"
+export type { SkillComparisonRowItem } from "./comparison"
 export type { PromptSkillAnswers } from "./prompt"
 export type { RawSkillEntryFileObject } from "./remote"
