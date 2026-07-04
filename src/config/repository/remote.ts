@@ -8,7 +8,7 @@ const remoteRepositoryConfig: RemoteRepositoryConfig = {
 
   remoteRepositoryBranch: "main",
 
-  remoteRepositorySkillDirectoryName: "skill",
+  remoteRepositorySkillDirectoryName: "skills",
 } as const
 
 export { remoteRepositoryConfig }
