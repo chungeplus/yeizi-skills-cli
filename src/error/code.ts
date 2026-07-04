@@ -8,6 +8,7 @@ const AppErrorCode = {
   PACKAGE_CONFIG_NOT_FOUND: "package_config_not_found",
   PLATFORM_NOT_SUPPORTED: "platform_not_supported",
   PLATFORM_NOT_FOUND: "platform_not_found",
+  REMOTE_REPOSITORY_PULL_FAILED: "remote_repository_pull_failed",
   REMOTE_SKILL_EMPTY: "remote_skill_empty",
   SKILL_OPTION_INVALID_FORMAT: "skill_option_invalid_format",
   SKILL_NOT_FOUND: "skill_not_found",

@@ -102,6 +102,12 @@ const errorDefinitionMap: AppErrorDefinitionMap = new Map([
       return `以下平台不存在：${appErrorParam.platformNameList.join("、")}。`
     },
   }],
+  [AppErrorCode.REMOTE_REPOSITORY_PULL_FAILED, {
+    appErrorTitle: "拉取远程仓库失败",
+    buildAppErrorMessage() {
+      return "拉取远程仓库失败，请检查网络后重试。"
+    },
+  }],
   [AppErrorCode.REMOTE_SKILL_EMPTY, {
     appErrorTitle: "远端技能为空",
     buildAppErrorMessage() {

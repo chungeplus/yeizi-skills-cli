@@ -11,24 +11,19 @@ async function promptSkillNameList(): Promise<SkillName[]> {
     throw new AppError(AppErrorCode.REMOTE_SKILL_EMPTY)
   }
 
-  const choiceList = remoteSkillList.map((skillItem) => {
-    let choiceName = skillItem.skillName
-    if (skillItem.skillDescription.length > 0) {
-      choiceName = `${skillItem.skillName}\n    └ ${skillItem.skillDescription}`
-    }
-
-    return {
-      name: choiceName,
-      value: skillItem.skillName,
-    }
-  })
+  const choiceList = remoteSkillList.map((skillItem) => ({
+    name: skillItem.skillName,
+    value: skillItem.skillName,
+    description: skillItem.skillDescription.length > 0 ? skillItem.skillDescription : undefined,
+  }))
 
   const answers = await inquirer.prompt<PromptSkillAnswers>([
     {
       type: "checkbox",
       name: "selectedSkillNameList",
-      message: "请选择要安装的技能。",
+      message: "请选择要安装的技能：",
       choices: choiceList,
+      instructions: false,
       validate: async (selectedSkillNameList: SkillName[]) => {
         if (selectedSkillNameList.length === 0) {
           return "请至少选择一个技能。"

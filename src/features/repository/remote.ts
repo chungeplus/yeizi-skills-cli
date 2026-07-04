@@ -4,6 +4,7 @@ import { tmpdir } from "node:os"
 
 import { join } from "node:path"
 import { downloadTemplate } from "giget"
+import ora from "ora"
 
 import { remoteRepositoryConfig } from "@/config/repository"
 import { AppError, AppErrorCode } from "@/error"
@@ -33,6 +34,7 @@ class RemoteRepositoryService {
 
   private static async loadLocalRepositoryDirectoryPath(): Promise<string> {
     const tempDirectoryPath = await mkdtemp(join(tmpdir(), "yeizi-skills-repo-"))
+    const spinner = ora({ text: "拉取远程仓库中" }).start()
 
     try {
       const downloadResult = await downloadTemplate(RemoteRepositoryService.getRemoteRepositoryRequestPath(), {
@@ -40,6 +42,7 @@ class RemoteRepositoryService {
         forceClean: true,
       })
 
+      spinner.stop()
       return downloadResult.dir
     }
     catch (error) {
@@ -48,8 +51,13 @@ class RemoteRepositoryService {
       }
       catch {
       }
-
-      throw error
+      spinner.stop()
+      if (error instanceof Error) {
+        throw new AppError(AppErrorCode.REMOTE_REPOSITORY_PULL_FAILED, {
+          cause: error,
+        })
+      }
+      throw new AppError(AppErrorCode.UNEXPECTED_ERROR)
     }
   }
 

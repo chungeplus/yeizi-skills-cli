@@ -11,7 +11,7 @@ async function promptPlatformNameList(): Promise<PlatformName[]> {
     {
       type: "checkbox",
       name: "selectedPlatformNameList",
-      message: "请选择的技能平台。",
+      message: "请选择的技能平台：",
       choices: [...localPlatformList.map(platformItem => platformItem.platformName)],
       validate: async (selectedPlatformNameList: PlatformName[]) => {
         if (selectedPlatformNameList.length > 0) {
