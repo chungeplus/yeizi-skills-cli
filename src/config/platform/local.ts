@@ -20,7 +20,7 @@ const localPlatformConfig: LocalPlatformConfig = {
       localPlatformName: "trae",
       localPlatformHomeDirectoryPath: join(userHomeDirectoryPath, ".trae"),
       localPlatformSkillDirectoryPath: join(userHomeDirectoryPath, ".trae", "skills"),
-    }
+    },
   ],
 
 } as const
