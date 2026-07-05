@@ -19,6 +19,7 @@ interface AppErrorParamMap {
   [AppErrorCode.PACKAGE_CONFIG_NOT_FOUND]: undefined
   [AppErrorCode.PLATFORM_NOT_SUPPORTED]: { platformName: PlatformName }
   [AppErrorCode.PLATFORM_NOT_FOUND]: { platformNameList: PlatformName[] }
+  [AppErrorCode.REMOTE_REPOSITORY_PULL_FAILED]: undefined
   [AppErrorCode.REMOTE_SKILL_EMPTY]: undefined
   [AppErrorCode.SKILL_OPTION_INVALID_FORMAT]: {
     rawSkillNameText: string
