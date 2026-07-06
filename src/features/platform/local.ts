@@ -59,7 +59,7 @@ class LocalPlatformService {
         localPlatformItem => localPlatformItem.localPlatformName,
       )
 
-      throw new AppError(AppErrorCode.PLATFORM_NOT_FOUND, {
+      throw new AppError(AppErrorCode.PLATFORM_NOT_FOUND_CODE, {
         param: {
           platformNameList: localPlatformNameList,
         },

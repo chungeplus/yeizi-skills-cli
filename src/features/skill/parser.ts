@@ -12,7 +12,7 @@ function parseSkillNameList(rawSkillNameText: string | undefined): SkillName[] {
   const parsedSkillNameCsvResult = rawSkillNameTextSchema.safeParse(rawSkillNameText)
 
   if (!parsedSkillNameCsvResult.success) {
-    throw new AppError(AppErrorCode.SKILL_OPTION_INVALID_FORMAT, {
+    throw new AppError(AppErrorCode.SKILL_OPTION_INVALID_FORMAT_CODE, {
       param: { rawSkillNameText },
     })
   }

@@ -1,29 +1,28 @@
-import type { PlatformName, PromptPlatformAnswers } from "@/types/platform"
+import type { PlatformName } from "@/types/platform"
 
-import inquirer from "inquirer"
+import { cancel, isCancel, multiselect } from "@clack/prompts"
 
+import { AppError, AppErrorCode } from "@/error"
 import { LocalPlatformService } from "@/features/platform"
 
 async function promptPlatformNameList(): Promise<PlatformName[]> {
   const localPlatformList = await LocalPlatformService.getLocalPlatformList()
 
-  const answers = await inquirer.prompt<PromptPlatformAnswers>([
-    {
-      type: "checkbox",
-      name: "selectedPlatformNameList",
-      message: "请选择的技能平台：",
-      choices: [...localPlatformList.map(platformItem => platformItem.platformName)],
-      validate: async (selectedPlatformNameList: PlatformName[]) => {
-        if (selectedPlatformNameList.length > 0) {
-          return true
-        }
+  const selectedPlatformNameList = await multiselect<PlatformName>({
+    message: "要安装到哪些平台？",
+    options: localPlatformList.map(platformItem => ({
+      value: platformItem.platformName,
+      label: platformItem.platformName,
+    })),
+    required: true,
+  })
 
-        return "请至少选择一个平台。"
-      },
-    },
-  ])
+  if (isCancel(selectedPlatformNameList)) {
+    cancel("已取消操作。")
+    throw new AppError(AppErrorCode.PROMPT_CANCELLED_CODE)
+  }
 
-  return answers.selectedPlatformNameList
+  return selectedPlatformNameList
 }
 
 export { promptPlatformNameList }

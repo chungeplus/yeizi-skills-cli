@@ -1,6 +1,10 @@
-# yeizi-skills
+# yeizi-skills-cli
 
-命令行工具，把远端 `yeizi-skills` 仓库中的技能同步到本地 AI 工具的技能目录。
+命令行工具项目 `yeizi-skills-cli`，用于把远端 `yeizi-skills` 仓库中的技能同步到本地 AI 工具的技能目录。
+
+```bash
+npx yeizi-skills
+```
 
 ## 支持平台
 
@@ -13,7 +17,7 @@
 ## 使用前提
 
 - 已安装 Node.js `>= 20`
-- 当前网络可以访问 GitHub（CLI 会用 git 协议拉取仓库快照）
+- 当前网络可以访问 GitHub（CLI 会从 GitHub 下载仓库快照）
 
 ## 30 秒快上手
 
@@ -23,13 +27,13 @@
 npx yeizi-skills
 ```
 
-查看所选平台上的技能（不传参数时 CLI 会交互提示选平台）：
+查看本地已安装技能列表：
 
 ```bash
 npx yeizi-skills list
 ```
 
-为指定平台安装技能（不传平台时同样会交互提示）：
+安装指定技能（运行时会交互提示选择平台）：
 
 ```bash
 npx yeizi-skills install --skill yeizi-auto-self-review
@@ -43,9 +47,9 @@ npx yeizi-skills install --skill yeizi-auto-self-review
 
 ### `npx yeizi-skills list`
 
-查看所选平台上每个技能的本地与远端对照状态（已安装 / 未安装 / 远端已移除）。
+查看本地已安装技能列表，并显示每个技能已安装到哪些平台。
 
-参数：当前无显式参数。运行时会交互提示选择平台。
+参数：当前无显式参数，也不会交互提示选择平台。
 
 ### `npx yeizi-skills install`
 
@@ -53,7 +57,9 @@ npx yeizi-skills install --skill yeizi-auto-self-review
 
 | 选项      | 说明                                | 是否必填 |
 | --------- | ----------------------------------- | -------- |
-| `--skill` | 技能列表，逗号分隔                  | 否（缺省时交互提示） |
+| `--skill` | 技能列表，逗号分隔                  | 否（缺省时交互提示选择技能） |
+
+运行时会交互提示选择安装平台。
 
 ## 许可证
 

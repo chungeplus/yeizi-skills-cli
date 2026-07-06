@@ -4,11 +4,12 @@ import type { InstallCommandOption, RawInstallCommandOption } from "@/types/comm
 import type { PlatformItem } from "@/types/platform"
 import type { SkillItem, SkillName } from "@/types/skill"
 
-import { renderTableDisplay } from "@/features/display"
+import { intro, outro } from "@clack/prompts"
+import picocolors from "picocolors"
+
 import { buildPlatformList, LocalPlatformService, promptPlatformNameList } from "@/features/platform"
 import { RemoteRepositoryService } from "@/features/repository"
 import {
-  buildInstalledSkillPlatformTableRowList,
   buildSkillList,
   copySkillListToPlatformList,
   parseSkillNameList,
@@ -30,6 +31,8 @@ class InstallCommand {
 
   public async execute(installCommandOption: InstallCommandOption): Promise<void> {
     try {
+      intro(picocolors.inverse(" yeizi-skills "))
+
       await RemoteSkillService.initRemoteSkill()
 
       await RemoteRepositoryService.initRemoteRepository()
@@ -54,12 +57,7 @@ class InstallCommand {
 
       await copySkillListToPlatformList(selectedSkillList, selectedPlatformList)
 
-      const installedSkillPlatformTableRowList = await buildInstalledSkillPlatformTableRowList(
-        selectedSkillList,
-        selectedPlatformList,
-      )
-
-      renderTableDisplay("安装完成", installedSkillPlatformTableRowList)
+      outro("安装成功！")
     }
     finally {
       await RemoteSkillService.resetRemoteSkill()

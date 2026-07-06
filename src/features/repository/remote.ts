@@ -3,8 +3,8 @@ import { mkdtemp } from "node:fs/promises"
 import { tmpdir } from "node:os"
 
 import { join } from "node:path"
+import { spinner } from "@clack/prompts"
 import { downloadTemplate } from "giget"
-import ora from "ora"
 
 import { remoteRepositoryConfig } from "@/config/repository"
 import { AppError, AppErrorCode } from "@/error"
@@ -34,7 +34,8 @@ class RemoteRepositoryService {
 
   private static async loadLocalRepositoryDirectoryPath(): Promise<string> {
     const tempDirectoryPath = await mkdtemp(join(tmpdir(), "yeizi-skills-repo-"))
-    const spinner = ora({ text: "拉取远程仓库中" }).start()
+    const loadSpinner = spinner()
+    loadSpinner.start("拉取远程仓库中")
 
     try {
       const downloadResult = await downloadTemplate(RemoteRepositoryService.getRemoteRepositoryRequestPath(), {
@@ -42,7 +43,7 @@ class RemoteRepositoryService {
         forceClean: true,
       })
 
-      spinner.stop()
+      loadSpinner.stop("拉取远程仓库完成。")
       return downloadResult.dir
     }
     catch (error) {
@@ -51,13 +52,13 @@ class RemoteRepositoryService {
       }
       catch {
       }
-      spinner.stop()
+      loadSpinner.stop("拉取远程仓库失败")
       if (error instanceof Error) {
-        throw new AppError(AppErrorCode.REMOTE_REPOSITORY_PULL_FAILED, {
+        throw new AppError(AppErrorCode.REMOTE_REPOSITORY_PULL_FAILED_CODE, {
           cause: error,
         })
       }
-      throw new AppError(AppErrorCode.UNEXPECTED_ERROR)
+      throw error
     }
   }
 
@@ -96,7 +97,7 @@ class RemoteRepositoryService {
     }
     catch (error) {
       if (error instanceof Error) {
-        throw new AppError(AppErrorCode.DIRECTORY_REMOVE_FAILED, {
+        throw new AppError(AppErrorCode.DIRECTORY_REMOVE_FAILED_CODE, {
           param: {
             directoryPath: RemoteRepositoryService.localRepositoryDirectoryPath,
           },

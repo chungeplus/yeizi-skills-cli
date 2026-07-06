@@ -1,6 +1,4 @@
-import boxen from "boxen"
-
-import chalk from "chalk"
+import { log, note } from "@clack/prompts"
 import stringWidth from "string-width"
 
 function buildTableColumnMaxWidthList(tableColumnCount: number, tableRowList: string[][]): number[] {
@@ -32,36 +30,26 @@ function formatTableColumnList(tableColumnList: string[], tableColumnTotalWidthL
     .join("")
 }
 
-function renderTableDisplay(
-  tableTitle: string,
-  tableRowList: string[][],
-): void {
+function renderTableDisplay(tableTitle: string, tableRowList: string[][]): void {
   const COLUMN_GAP_WIDTH = 8
-  let tableText = ""
 
-  if (tableRowList.length > 0) {
-    const tableColumnCount = tableRowList[0].length
-    const tableColumnMaxWidthList = buildTableColumnMaxWidthList(tableColumnCount, tableRowList)
-    const tableColumnTotalWidthList = tableColumnMaxWidthList.map(
-      tableColumnMaxWidth => tableColumnMaxWidth + COLUMN_GAP_WIDTH,
-    )
-    tableText = tableRowList
-      .map(tableColumnList => formatTableColumnList(tableColumnList, tableColumnTotalWidthList))
-      .join("\n")
+  log.message("")
+
+  if (tableRowList.length === 0) {
+    note("暂无数据", tableTitle, { withGuide: false })
+    return
   }
 
-  console.log(boxen(
-    chalk.yellow(tableText),
-    {
-      title: chalk.bold.green(tableTitle),
-      titleAlignment: "center",
-      padding: { top: 1, bottom: 1, left: 3, right: 3 },
-      margin: 1,
-      borderStyle: "round",
-      borderColor: "green",
-      textAlignment: "left",
-    },
-  ))
+  const tableColumnCount = tableRowList[0].length
+  const tableColumnMaxWidthList = buildTableColumnMaxWidthList(tableColumnCount, tableRowList)
+  const columnTotalWidthList = tableColumnMaxWidthList.map(
+    tableColumnMaxWidth => tableColumnMaxWidth + COLUMN_GAP_WIDTH,
+  )
+  const formattedRowList = tableRowList.map(tableColumnList =>
+    formatTableColumnList(tableColumnList, columnTotalWidthList).trimEnd(),
+  )
+
+  note(formattedRowList.join("\n"), tableTitle, { withGuide: false })
 }
 
 export { renderTableDisplay }

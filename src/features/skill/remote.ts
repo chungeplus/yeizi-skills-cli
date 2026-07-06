@@ -59,6 +59,10 @@ class RemoteSkillService {
       leftSkillItem.skillName.localeCompare(rightSkillItem.skillName),
     )
 
+    if (remoteSkillList.length === 0) {
+      throw new AppError(AppErrorCode.REMOTE_SKILL_EMPTY_CODE)
+    }
+
     return remoteSkillList
   }
 
@@ -70,7 +74,7 @@ class RemoteSkillService {
     )
 
     if (notExistSkillNameList.length > 0) {
-      throw new AppError(AppErrorCode.SKILL_NOT_FOUND, {
+      throw new AppError(AppErrorCode.SKILL_NOT_FOUND_CODE, {
         param: { skillNameList: notExistSkillNameList },
       })
     }

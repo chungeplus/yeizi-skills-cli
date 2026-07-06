@@ -1,6 +1,9 @@
 import type { Command } from "commander"
 import type { CommandOption, ListCommandOption, RawListCommandOption } from "@/types/commands"
 
+import { intro } from "@clack/prompts"
+import picocolors from "picocolors"
+
 import { renderTableDisplay } from "@/features/display"
 import { LocalPlatformService } from "@/features/platform"
 import { RemoteRepositoryService } from "@/features/repository"
@@ -18,6 +21,8 @@ class ListCommand {
 
   public async execute(_listCommandOption: ListCommandOption): Promise<void> {
     try {
+      intro(picocolors.inverse(" yeizi-skills "))
+
       await RemoteSkillService.initRemoteSkill()
 
       await RemoteRepositoryService.initRemoteRepository()
@@ -33,7 +38,7 @@ class ListCommand {
         localPlatformList,
       )
 
-      renderTableDisplay("已安装技能列表", installedSkillPlatformTableRowList)
+      renderTableDisplay("已安装技能列表：", installedSkillPlatformTableRowList)
     }
     finally {
       await RemoteSkillService.resetRemoteSkill()

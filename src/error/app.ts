@@ -1,7 +1,7 @@
 import type { AppErrorCodeType, AppErrorOption, AppErrorParam } from "@/types/error"
 import { getErrorDefinition } from "@/error/definition"
 
-class AppError<T extends AppErrorCodeType> extends Error {
+class AppError<T extends AppErrorCodeType = AppErrorCodeType> extends Error {
   public readonly appErrorCode: T
 
   public readonly appErrorTitle: string
@@ -9,7 +9,7 @@ class AppError<T extends AppErrorCodeType> extends Error {
   public constructor(appErrorCode: T, appErrorOption?: AppErrorOption<T>) {
     const appErrorParam = appErrorOption?.param
     const appErrorCause = appErrorOption?.cause
-    const baseMessage = AppError.buildMessage(appErrorCode, appErrorParam)
+    const baseMessage = AppError.buildMessage(appErrorCode, appErrorParam!)
 
     super(baseMessage, {
       cause: appErrorCause,
@@ -22,7 +22,7 @@ class AppError<T extends AppErrorCodeType> extends Error {
 
   private static buildMessage<T extends AppErrorCodeType>(
     appErrorCode: T,
-    appErrorParam: AppErrorParam<T> | undefined,
+    appErrorParam: AppErrorParam<T>,
   ): string {
     const definition = getErrorDefinition(appErrorCode)
 
