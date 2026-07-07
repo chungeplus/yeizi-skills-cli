@@ -1,9 +1,9 @@
+import type { CommanderError } from "commander"
 import type {
   CommanderErrorCodeType,
   CommanderErrorToAppErrorMap,
   ExcessArgumentCountInfo,
 } from "@/types/error"
-import { CommanderError } from "commander"
 
 import { AppError } from "./app"
 import { AppErrorCode, COMMANDER_HELP_DISPLAYED_CODE, CommanderErrorCode } from "./code"

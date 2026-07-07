@@ -54,6 +54,7 @@ async function runCli(): Promise<void> {
       if (error instanceof CommanderError) {
         buildAppErrorFromCommanderError(error)
       }
+      throw error
     }
   }
   catch (error) {
