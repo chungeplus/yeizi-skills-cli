@@ -1,5 +1,5 @@
 export {
-  buildInstalledSkillPlatformTableRowList,
+  buildAddedSkillPlatformTableRowList,
   buildSkillList,
 } from "./builder"
 export { copySkillListToPlatformList } from "./copy"

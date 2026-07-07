@@ -3,7 +3,7 @@ import type { AppErrorCodeType } from "@/types/error"
 import process from "node:process"
 
 import { Command, CommanderError } from "commander"
-import { InstallCommand } from "@/commands/install"
+import { AddCommand } from "@/commands/add"
 import { ListCommand } from "@/commands/list"
 import { AppError, AppErrorCode, buildAppErrorFromCommanderError } from "@/error"
 import { renderErrorDisplay } from "@/features/display"
@@ -34,7 +34,7 @@ async function createProgram(): Promise<Command> {
   program.version(packageJsonInfo.version)
 
   new ListCommand().register(program)
-  new InstallCommand().register(program)
+  new AddCommand().register(program)
 
   return program
 }

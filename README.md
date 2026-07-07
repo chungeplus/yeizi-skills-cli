@@ -27,16 +27,16 @@ npx yeizi-skills
 npx yeizi-skills
 ```
 
-查看本地已安装技能列表：
+查看本地已添加技能列表：
 
 ```bash
 npx yeizi-skills list
 ```
 
-安装指定技能（运行时会交互提示选择平台）：
+添加指定技能（运行时会交互提示选择平台）：
 
 ```bash
-npx yeizi-skills install --skill yeizi-auto-self-review
+npx yeizi-skills add --skill yeizi-auto-self-review
 ```
 
 ## 命令参考
@@ -47,11 +47,11 @@ npx yeizi-skills install --skill yeizi-auto-self-review
 
 ### `npx yeizi-skills list`
 
-查看本地已安装技能列表，并显示每个技能已安装到哪些平台。
+查看本地已添加技能列表，并显示每个技能已添加到哪些平台。
 
 参数：当前无显式参数，也不会交互提示选择平台。
 
-### `npx yeizi-skills install`
+### `npx yeizi-skills add`
 
 把指定技能从远端仓库复制到所选平台的技能目录。
 
@@ -59,7 +59,7 @@ npx yeizi-skills install --skill yeizi-auto-self-review
 | --------- | --------- | -------------- |
 | `--skill` | 技能列表，逗号分隔 | 否（缺省时交互提示选择技能） |
 
-运行时会交互提示选择安装平台。
+运行时会交互提示选择添加平台。
 
 ## 许可证
 

@@ -1,5 +1,5 @@
 import type { Command } from "commander"
-import type { CommandOption, InstallCommandOption, RawInstallCommandOption } from "@/types/commands"
+import type { AddCommandOption, CommandOption, RawAddCommandOption } from "@/types/commands"
 import type { PlatformItem } from "@/types/platform"
 import type { SkillItem } from "@/types/skill"
 
@@ -16,10 +16,10 @@ import {
   RemoteSkillService,
 } from "@/features/skill"
 
-class InstallCommand {
-  public commandName = "install"
+class AddCommand {
+  public commandName = "add"
 
-  public commandDescription = "安装技能。"
+  public commandDescription = "添加技能。"
 
   public commandOptionList: CommandOption[] = [
     {
@@ -28,7 +28,7 @@ class InstallCommand {
     },
   ]
 
-  public async execute(installCommandOption: InstallCommandOption): Promise<void> {
+  public async execute(addCommandOption: AddCommandOption): Promise<void> {
     try {
       intro(picocolors.inverse(" yeizi-skills "))
 
@@ -37,7 +37,7 @@ class InstallCommand {
         LocalPlatformService.initLocalPlatform(),
       ])
 
-      const inputSkillNameList = parseSkillNameList(installCommandOption.rawSkillNameText)
+      const inputSkillNameList = parseSkillNameList(addCommandOption.rawSkillNameText)
 
       await RemoteSkillService.validateSkillNameListExistInRemoteSkillList(inputSkillNameList)
 
@@ -55,7 +55,7 @@ class InstallCommand {
 
       await copySkillListToPlatformList(selectedSkillList, selectedPlatformList)
 
-      outro("安装成功！")
+      outro("添加成功！")
     }
     finally {
       await Promise.allSettled([
@@ -67,23 +67,23 @@ class InstallCommand {
   }
 
   public register(program: Command): void {
-    const installCommand = program.command(this.commandName).description(this.commandDescription)
+    const addCommand = program.command(this.commandName).description(this.commandDescription)
 
     this.commandOptionList.forEach((commandOption) => {
-      installCommand.option(
+      addCommand.option(
         commandOption.commandOptionFlag,
         commandOption.commandOptionDescription,
       )
     })
 
-    installCommand.action(async (rawInstallCommandOption: RawInstallCommandOption) => {
-      const installCommandOption: InstallCommandOption = {
-        rawSkillNameText: rawInstallCommandOption.skill,
+    addCommand.action(async (rawAddCommandOption: RawAddCommandOption) => {
+      const addCommandOption: AddCommandOption = {
+        rawSkillNameText: rawAddCommandOption.skill,
       }
 
-      await this.execute(installCommandOption)
+      await this.execute(addCommandOption)
     })
   }
 }
 
-export { InstallCommand }
+export { AddCommand }

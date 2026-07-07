@@ -13,11 +13,11 @@ async function buildSkillList(skillNameList: string[]): Promise<SkillItem[]> {
   return skillList
 }
 
-async function buildInstalledSkillPlatformTableRowList(
+async function buildAddedSkillPlatformTableRowList(
   skillList: SkillList,
   platformList: PlatformList,
 ): Promise<string[][]> {
-  const platformInstalledSkillNameEntryList = await Promise.all(
+  const platformAddedSkillNameEntryList = await Promise.all(
     platformList.map(async ({ platformSkillDirectoryPath, platformName }) => {
       let platformDirectoryEntryList
       try {
@@ -31,35 +31,35 @@ async function buildInstalledSkillPlatformTableRowList(
         }
         throw error
       }
-      const installedSkillNameList = platformDirectoryEntryList
+      const addedSkillNameList = platformDirectoryEntryList
         .filter(directoryEntryItem => directoryEntryItem.isDirectory())
         .map(({ name }) => name)
 
       return {
         platformName,
-        installedSkillNameList,
+        addedSkillNameList,
       }
     }),
   )
 
-  const installedSkillPlatformTableRowList: string[][] = []
+  const addedSkillPlatformTableRowList: string[][] = []
 
   skillList.forEach(({ skillName }) => {
-    const installedPlatformNameList = platformInstalledSkillNameEntryList
-      .filter(({ installedSkillNameList }) => installedSkillNameList.includes(skillName))
+    const addedPlatformNameList = platformAddedSkillNameEntryList
+      .filter(({ addedSkillNameList }) => addedSkillNameList.includes(skillName))
       .map(({ platformName }) => platformName)
 
-    if (installedPlatformNameList.length === 0) {
+    if (addedPlatformNameList.length === 0) {
       return
     }
 
-    installedSkillPlatformTableRowList.push([skillName, installedPlatformNameList.join(", ")])
+    addedSkillPlatformTableRowList.push([skillName, addedPlatformNameList.join(", ")])
   })
 
-  return installedSkillPlatformTableRowList
+  return addedSkillPlatformTableRowList
 }
 
 export {
-  buildInstalledSkillPlatformTableRowList,
+  buildAddedSkillPlatformTableRowList,
   buildSkillList,
 }

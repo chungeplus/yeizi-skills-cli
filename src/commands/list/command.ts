@@ -8,7 +8,7 @@ import { renderTableDisplay } from "@/features/display"
 import { LocalPlatformService } from "@/features/platform"
 import { RemoteRepositoryService } from "@/features/repository"
 import {
-  buildInstalledSkillPlatformTableRowList,
+  buildAddedSkillPlatformTableRowList,
   RemoteSkillService,
 } from "@/features/skill"
 
@@ -32,12 +32,12 @@ class ListCommand {
 
       const localPlatformList = await LocalPlatformService.getLocalPlatformList()
 
-      const installedSkillPlatformTableRowList = await buildInstalledSkillPlatformTableRowList(
+      const addedSkillPlatformTableRowList = await buildAddedSkillPlatformTableRowList(
         remoteSkillList,
         localPlatformList,
       )
 
-      renderTableDisplay("已安装技能列表：", installedSkillPlatformTableRowList)
+      renderTableDisplay("已添加技能列表：", addedSkillPlatformTableRowList)
     }
     finally {
       await Promise.allSettled([
