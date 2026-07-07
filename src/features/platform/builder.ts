@@ -1,8 +1,8 @@
-import type { PlatformItem, PlatformName } from "@/types/platform"
+import type { PlatformItem } from "@/types/platform"
 
-import { LocalPlatformService } from "@/features/platform"
+import { LocalPlatformService } from "./local"
 
-async function buildPlatformList(platformNameList: PlatformName[]): Promise<PlatformItem[]> {
+async function buildPlatformList(platformNameList: string[]): Promise<PlatformItem[]> {
   const localPlatformList = await LocalPlatformService.getLocalPlatformList()
 
   const platformList = platformNameList.map(

@@ -2,167 +2,170 @@ import type {
   AppErrorCodeType,
   AppErrorDefinition,
   AppErrorDefinitionMap,
-  AppErrorParam,
 } from "@/types/error"
 import { AppErrorCode } from "./code"
 
-const errorDefinitionMap: AppErrorDefinitionMap = new Map([
-  [AppErrorCode.COMMANDER_NORMAL_EXIT_CODE, {
+const appErrorDefinitionMap: AppErrorDefinitionMap = {
+  [AppErrorCode.COMMANDER_NORMAL_EXIT_CODE]: {
     appErrorTitle: "命令已结束",
     buildAppErrorMessage(): string {
       return "命令已正常结束。"
     },
-  }],
-  [AppErrorCode.COMMANDER_HELP_DISPLAYED_CODE, {
+  },
+  [AppErrorCode.COMMANDER_HELP_DISPLAYED_CODE]: {
     appErrorTitle: "已显示帮助",
     buildAppErrorMessage(): string {
       return "已显示帮助信息。"
     },
-  }],
-  [AppErrorCode.COMMANDER_UNKNOWN_COMMAND_CODE, {
+  },
+  [AppErrorCode.COMMANDER_UNKNOWN_COMMAND_CODE]: {
     appErrorTitle: "命令不存在",
-    buildAppErrorMessage(appErrorParam: AppErrorParam<typeof AppErrorCode.COMMANDER_UNKNOWN_COMMAND_CODE>): string {
+    buildAppErrorMessage(appErrorParam): string {
       return appErrorParam.detailMessage
     },
-  }],
-  [AppErrorCode.COMMANDER_UNKNOWN_OPTION_CODE, {
+  },
+  [AppErrorCode.COMMANDER_UNKNOWN_OPTION_CODE]: {
     appErrorTitle: "选项不受支持",
-    buildAppErrorMessage(appErrorParam: AppErrorParam<typeof AppErrorCode.COMMANDER_UNKNOWN_OPTION_CODE>): string {
+    buildAppErrorMessage(appErrorParam): string {
       return appErrorParam.detailMessage
     },
-  }],
-  [AppErrorCode.COMMANDER_OPTION_MISSING_ARGUMENT_CODE, {
+  },
+  [AppErrorCode.COMMANDER_OPTION_MISSING_ARGUMENT_CODE]: {
     appErrorTitle: "选项缺少参数值",
-    buildAppErrorMessage(appErrorParam: AppErrorParam<typeof AppErrorCode.COMMANDER_OPTION_MISSING_ARGUMENT_CODE>): string {
+    buildAppErrorMessage(appErrorParam): string {
       return appErrorParam.detailMessage
     },
-  }],
-  [AppErrorCode.COMMANDER_MISSING_MANDATORY_OPTION_VALUE_CODE, {
-    appErrorTitle: "缺少必填选项值",
-    buildAppErrorMessage(appErrorParam: AppErrorParam<typeof AppErrorCode.COMMANDER_MISSING_MANDATORY_OPTION_VALUE_CODE>): string {
+  },
+  [AppErrorCode.COMMANDER_MANDATORY_OPTION_VALUE_MISSING_CODE]: {
+    appErrorTitle: "必填选项值缺失",
+    buildAppErrorMessage(appErrorParam): string {
       return appErrorParam.detailMessage
     },
-  }],
-  [AppErrorCode.COMMANDER_MISSING_ARGUMENT_CODE, {
+  },
+  [AppErrorCode.COMMANDER_MISSING_ARGUMENT_CODE]: {
     appErrorTitle: "缺少必填参数",
-    buildAppErrorMessage(appErrorParam: AppErrorParam<typeof AppErrorCode.COMMANDER_MISSING_ARGUMENT_CODE>): string {
+    buildAppErrorMessage(appErrorParam): string {
       return appErrorParam.detailMessage
     },
-  }],
-  [AppErrorCode.COMMANDER_EXCESS_ARGUMENTS_CODE, {
+  },
+  [AppErrorCode.COMMANDER_EXCESS_ARGUMENTS_CODE]: {
     appErrorTitle: "命令参数过多",
-    buildAppErrorMessage(appErrorParam: AppErrorParam<typeof AppErrorCode.COMMANDER_EXCESS_ARGUMENTS_CODE>): string {
+    buildAppErrorMessage(appErrorParam): string {
       return appErrorParam.detailMessage
     },
-  }],
-  [AppErrorCode.COMMANDER_QUOTED_VALUE_MISSING_CODE, {
-    appErrorTitle: "命令解析错误",
-    buildAppErrorMessage(appErrorParam: AppErrorParam<typeof AppErrorCode.COMMANDER_QUOTED_VALUE_MISSING_CODE>): string {
-      return appErrorParam.detailMessage
-    },
-  }],
-  [AppErrorCode.COMMANDER_EXCESS_ARGUMENTS_MESSAGE_INVALID_CODE, {
-    appErrorTitle: "命令解析错误",
-    buildAppErrorMessage(appErrorParam: AppErrorParam<typeof AppErrorCode.COMMANDER_EXCESS_ARGUMENTS_MESSAGE_INVALID_CODE>): string {
-      return appErrorParam.detailMessage
-    },
-  }],
-  [AppErrorCode.COMMANDER_CODE_UNSUPPORTED_CODE, {
-    appErrorTitle: "命令解析错误",
-    buildAppErrorMessage(appErrorParam: AppErrorParam<typeof AppErrorCode.COMMANDER_CODE_UNSUPPORTED_CODE>): string {
-      return appErrorParam.detailMessage
-    },
-  }],
-  [AppErrorCode.UNEXPECTED_ERROR_CODE, {
+  },
+  [AppErrorCode.UNEXPECTED_ERROR_CODE]: {
     appErrorTitle: "程序异常",
-    buildAppErrorMessage(appErrorParam: AppErrorParam<typeof AppErrorCode.UNEXPECTED_ERROR_CODE>): string {
+    buildAppErrorMessage(appErrorParam): string {
       return appErrorParam.detailMessage
     },
-  }],
-  [AppErrorCode.PACKAGE_BIN_CONFIG_MISSING_CODE, {
-    appErrorTitle: "程序配置错误",
-    buildAppErrorMessage() {
+  },
+  [AppErrorCode.PACKAGE_BIN_CONFIG_MISSING_CODE]: {
+    appErrorTitle: "package.json bin 配置缺失",
+    buildAppErrorMessage(): string {
       return "package.json 中缺少 bin 配置。"
     },
-  }],
-  [AppErrorCode.PACKAGE_CONFIG_JSON_INVALID_CODE, {
-    appErrorTitle: "程序配置错误",
-    buildAppErrorMessage() {
+  },
+  [AppErrorCode.PACKAGE_CONFIG_JSON_INVALID_CODE]: {
+    appErrorTitle: "package.json 语法错误",
+    buildAppErrorMessage(): string {
       return "package.json JSON 语法不正确。"
     },
-  }],
-  [AppErrorCode.PACKAGE_CONFIG_SCHEMA_INVALID_CODE, {
-    appErrorTitle: "程序配置错误",
-    buildAppErrorMessage() {
+  },
+  [AppErrorCode.PACKAGE_CONFIG_SCHEMA_INVALID_CODE]: {
+    appErrorTitle: "package.json 结构不合法",
+    buildAppErrorMessage(): string {
       return "package.json 内容不符合预期结构。"
     },
-  }],
-  [AppErrorCode.PACKAGE_CONFIG_NOT_FOUND_CODE, {
-    appErrorTitle: "程序配置错误",
-    buildAppErrorMessage() {
+  },
+  [AppErrorCode.PACKAGE_CONFIG_NOT_FOUND_CODE]: {
+    appErrorTitle: "package.json 未找到",
+    buildAppErrorMessage(): string {
       return "未找到 package.json。"
     },
-  }],
-  [AppErrorCode.PLATFORM_NOT_FOUND_CODE, {
+  },
+  [AppErrorCode.PLATFORM_NOT_FOUND_CODE]: {
     appErrorTitle: "平台不存在",
-    buildAppErrorMessage(appErrorParam: AppErrorParam<typeof AppErrorCode.PLATFORM_NOT_FOUND_CODE>) {
+    buildAppErrorMessage(appErrorParam): string {
       return `以下平台不存在：${appErrorParam.platformNameList.join("、")}。`
     },
-  }],
-  [AppErrorCode.REMOTE_REPOSITORY_PULL_FAILED_CODE, {
-    appErrorTitle: "拉取远程仓库失败",
-    buildAppErrorMessage() {
-      return "拉取远程仓库失败，请检查网络后重试。"
+  },
+  [AppErrorCode.REMOTE_REPOSITORY_DOWNLOAD_FAILED_CODE]: {
+    appErrorTitle: "下载远程仓库失败",
+    buildAppErrorMessage(): string {
+      return "下载远程仓库失败，请检查网络后重试。"
     },
-  }],
-  [AppErrorCode.REMOTE_SKILL_EMPTY_CODE, {
+  },
+  [AppErrorCode.REMOTE_SKILL_EMPTY_CODE]: {
     appErrorTitle: "远端技能为空",
-    buildAppErrorMessage() {
+    buildAppErrorMessage(): string {
       return "远端仓库中没有可安装的技能。"
     },
-  }],
-  [AppErrorCode.SKILL_OPTION_INVALID_FORMAT_CODE, {
-    appErrorTitle: "参数错误",
-    buildAppErrorMessage(appErrorParam: AppErrorParam<typeof AppErrorCode.SKILL_OPTION_INVALID_FORMAT_CODE>) {
-      return `技能选项"${appErrorParam.rawSkillNameText}"格式不正确，应类似 yeizi-skill 或 yeizi-skill-1,yeizi-skill-2（多个技能用英文逗号分隔）。`
-    },
-  }],
-  [AppErrorCode.SKILL_NOT_FOUND_CODE, {
-    appErrorTitle: "技能不存在",
-    buildAppErrorMessage(appErrorParam: AppErrorParam<typeof AppErrorCode.SKILL_NOT_FOUND_CODE>) {
+  },
+  [AppErrorCode.REMOTE_SKILL_NOT_FOUND_CODE]: {
+    appErrorTitle: "远端技能不存在",
+    buildAppErrorMessage(appErrorParam): string {
       const skillNameList = appErrorParam.skillNameList
 
       if (skillNameList.length === 1) {
-        return `技能"${skillNameList[0]}"不存在。`
+        return `远端技能"${skillNameList[0]}"不存在。`
       }
 
-      return `以下技能不存在：${skillNameList.join("、")}。`
+      return `以下远端技能不存在：${skillNameList.join("、")}。`
     },
-  }],
-  [AppErrorCode.FILE_COPY_FAILED_CODE, {
-    appErrorTitle: "文件复制失败",
-    buildAppErrorMessage(appErrorParam: AppErrorParam<typeof AppErrorCode.FILE_COPY_FAILED_CODE>) {
-      return `从"${appErrorParam.sourcePath}"复制到"${appErrorParam.targetPath}"失败。`
+  },
+  [AppErrorCode.REMOTE_SKILL_ENTRY_INVALID_CODE]: {
+    appErrorTitle: "远端技能条目不合法",
+    buildAppErrorMessage(appErrorParam): string {
+      return `远端技能条目"${appErrorParam.skillEntryFilePath}"不符合预期结构。`
     },
-  }],
-  [AppErrorCode.DIRECTORY_REMOVE_FAILED_CODE, {
+  },
+  [AppErrorCode.REMOTE_SKILL_ENTRY_MISSING_CODE]: {
+    appErrorTitle: "远端技能条目缺失",
+    buildAppErrorMessage(appErrorParam): string {
+      return `远端技能条目"${appErrorParam.skillEntryFilePath}"未找到。`
+    },
+  },
+  [AppErrorCode.REMOTE_SKILL_DIRECTORY_INVALID_CODE]: {
+    appErrorTitle: "远端技能目录不可读",
+    buildAppErrorMessage(appErrorParam): string {
+      return `远端技能目录"${appErrorParam.remoteSkillDirectoryPath}"读取失败。`
+    },
+  },
+  [AppErrorCode.PLATFORM_SKILL_DIRECTORY_INVALID_CODE]: {
+    appErrorTitle: "平台技能目录不可读",
+    buildAppErrorMessage(appErrorParam): string {
+      return `平台"${appErrorParam.platformName}"的技能目录"${appErrorParam.platformSkillDirectoryPath}"读取失败。`
+    },
+  },
+  [AppErrorCode.SKILL_OPTION_INVALID_FORMAT_CODE]: {
+    appErrorTitle: "参数错误",
+    buildAppErrorMessage(appErrorParam): string {
+      return `技能选项"${appErrorParam.rawSkillNameText}"格式不正确，应类似 yeizi-skill 或 yeizi-skill-1,yeizi-skill-2（多个技能用英文逗号分隔）。`
+    },
+  },
+  [AppErrorCode.SKILL_COPY_FAILED_CODE]: {
+    appErrorTitle: "技能复制失败",
+    buildAppErrorMessage(appErrorParam): string {
+      return `从"${appErrorParam.sourceDirectoryPath}"复制到"${appErrorParam.targetDirectoryPath}"失败。`
+    },
+  },
+  [AppErrorCode.DIRECTORY_REMOVE_FAILED_CODE]: {
     appErrorTitle: "删除目录失败",
-    buildAppErrorMessage(appErrorParam: AppErrorParam<typeof AppErrorCode.DIRECTORY_REMOVE_FAILED_CODE>) {
+    buildAppErrorMessage(appErrorParam): string {
       return `删除临时目录"${appErrorParam.directoryPath}"失败。`
     },
-  }],
-  [AppErrorCode.PROMPT_CANCELLED_CODE, {
+  },
+  [AppErrorCode.PROMPT_CANCELLED_CODE]: {
     appErrorTitle: "已取消操作",
-    buildAppErrorMessage() {
+    buildAppErrorMessage(): string {
       return "已取消本次操作。"
     },
-  }],
-])
-
-function getErrorDefinition<T extends AppErrorCodeType>(code: T): AppErrorDefinition<T> {
-  const errorDefinition = errorDefinitionMap.get(code)!
-
-  return errorDefinition as AppErrorDefinition<T>
+  },
 }
 
-export { getErrorDefinition }
+function getAppErrorDefinition<T extends AppErrorCodeType>(code: T): AppErrorDefinition<T> {
+  return appErrorDefinitionMap[code]
+}
+
+export { getAppErrorDefinition }

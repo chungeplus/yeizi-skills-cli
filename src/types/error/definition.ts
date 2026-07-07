@@ -1,18 +1,16 @@
-import type { AppErrorCodeType, AppErrorParam } from "@/types/error"
+import type { AppErrorParam } from "./app"
+import type { AppErrorCodeType } from "./code"
 
 interface AppErrorDefinition<T extends AppErrorCodeType = AppErrorCodeType> {
   appErrorTitle: string
   buildAppErrorMessage: (appErrorParam: AppErrorParam<T>) => string
 }
 
-type AppErrorDefinitionMapValue = {
+type AppErrorDefinitionMap = {
   [K in AppErrorCodeType]: AppErrorDefinition<K>
-}[AppErrorCodeType]
-
-type AppErrorDefinitionMap = Map<AppErrorCodeType, AppErrorDefinitionMapValue>
+}
 
 export type {
   AppErrorDefinition,
   AppErrorDefinitionMap,
-  AppErrorDefinitionMapValue,
 }

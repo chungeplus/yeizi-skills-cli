@@ -1,6 +1,6 @@
-# yeizi-skills-cli
+# yeizi-skills
 
-命令行工具项目 `yeizi-skills-cli`，用于把远端 `yeizi-skills` 仓库中的技能同步到本地 AI 工具的技能目录。
+命令行工具项目用于把远端 [yeizi-skills](https://github.com/chungeplus/yeizi-skills) 仓库中的技能同步到本地 AI 工具的技能目录。
 
 ```bash
 npx yeizi-skills
@@ -8,11 +8,11 @@ npx yeizi-skills
 
 ## 支持平台
 
-| 平台    | 技能目录                  |
-| ------- | ------------------------- |
-| codex   | `~/.codex/skills`         |
-| claude  | `~/.claude/skills`        |
-| trae    | `~/.trae/skills`          |
+| 平台     | 技能目录               |
+| ------ | ------------------ |
+| codex  | `~/.codex/skills`  |
+| claude | `~/.claude/skills` |
+| trae   | `~/.trae/skills`   |
 
 ## 使用前提
 
@@ -55,9 +55,9 @@ npx yeizi-skills install --skill yeizi-auto-self-review
 
 把指定技能从远端仓库复制到所选平台的技能目录。
 
-| 选项      | 说明                                | 是否必填 |
-| --------- | ----------------------------------- | -------- |
-| `--skill` | 技能列表，逗号分隔                  | 否（缺省时交互提示选择技能） |
+| 选项        | 说明        | 是否必填           |
+| --------- | --------- | -------------- |
+| `--skill` | 技能列表，逗号分隔 | 否（缺省时交互提示选择技能） |
 
 运行时会交互提示选择安装平台。
 

@@ -13,21 +13,20 @@ import {
 } from "@/features/skill"
 
 class ListCommand {
-  public readonly commandName = "list"
+  public commandName = "list"
 
-  public readonly commandDescription = "查看技能列表。"
+  public commandDescription = "查看技能列表。"
 
-  public readonly commandOptionList: readonly CommandOption[] = []
+  public commandOptionList: CommandOption[] = []
 
   public async execute(_listCommandOption: ListCommandOption): Promise<void> {
     try {
       intro(picocolors.inverse(" yeizi-skills "))
 
-      await RemoteSkillService.initRemoteSkill()
-
-      await RemoteRepositoryService.initRemoteRepository()
-
-      await LocalPlatformService.initLocalPlatform()
+      await Promise.all([
+        RemoteSkillService.initRemoteSkill(),
+        LocalPlatformService.initLocalPlatform(),
+      ])
 
       const remoteSkillList = await RemoteSkillService.getRemoteSkillList()
 
@@ -41,11 +40,11 @@ class ListCommand {
       renderTableDisplay("已安装技能列表：", installedSkillPlatformTableRowList)
     }
     finally {
-      await RemoteSkillService.resetRemoteSkill()
-
-      await RemoteRepositoryService.resetRemoteRepository()
-
-      await LocalPlatformService.resetLocalPlatform()
+      await Promise.allSettled([
+        RemoteSkillService.clearRemoteSkill(),
+        RemoteRepositoryService.clearRemoteRepository(),
+        LocalPlatformService.clearLocalPlatform(),
+      ])
     }
   }
 

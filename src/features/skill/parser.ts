@@ -1,10 +1,8 @@
-import type { SkillName } from "@/types/skill"
-
 import { AppError, AppErrorCode } from "@/error"
-import { rawSkillNameTextSchema } from "@/schemas/skill/parser"
+import { rawSkillNameTextSchema } from "@/schemas/skill"
 import { splitCsvString } from "@/tools/string"
 
-function parseSkillNameList(rawSkillNameText: string | undefined): SkillName[] {
+function parseSkillNameList(rawSkillNameText: string | undefined): string[] {
   if (rawSkillNameText === undefined) {
     return []
   }

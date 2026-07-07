@@ -15,13 +15,11 @@ class RemoteRepositoryService {
 
   private static localRepositoryDirectoryPath: string | undefined
 
-  private static initRemoteRepositoryPromise: Promise<[void]> | null = null
+  private static initRemoteRepositoryPromise: Promise<void> | null = null
 
-  public static async initRemoteRepository(): Promise<[void]> {
+  public static async initRemoteRepository(): Promise<void> {
     if (RemoteRepositoryService.initRemoteRepositoryPromise === null) {
-      RemoteRepositoryService.initRemoteRepositoryPromise = Promise.all([
-        RemoteRepositoryService.createLoadLocalRepositoryDirectoryPathPromise(),
-      ])
+      RemoteRepositoryService.initRemoteRepositoryPromise = RemoteRepositoryService.createLoadLocalRepositoryDirectoryPathPromise()
     }
 
     return RemoteRepositoryService.initRemoteRepositoryPromise
@@ -29,13 +27,13 @@ class RemoteRepositoryService {
 
   private static async createLoadLocalRepositoryDirectoryPathPromise(): Promise<void> {
     const localRepositoryDirectoryPath = await RemoteRepositoryService.loadLocalRepositoryDirectoryPath()
-    RemoteRepositoryService.localRepositoryDirectoryPath = localRepositoryDirectoryPath!
+    RemoteRepositoryService.localRepositoryDirectoryPath = localRepositoryDirectoryPath
   }
 
   private static async loadLocalRepositoryDirectoryPath(): Promise<string> {
-    const tempDirectoryPath = await mkdtemp(join(tmpdir(), "yeizi-skills-repo-"))
     const loadSpinner = spinner()
     loadSpinner.start("拉取远程仓库中")
+    const tempDirectoryPath = await mkdtemp(join(tmpdir(), "yeizi-skills-repo-"))
 
     try {
       const downloadResult = await downloadTemplate(RemoteRepositoryService.getRemoteRepositoryRequestPath(), {
@@ -50,13 +48,12 @@ class RemoteRepositoryService {
       try {
         await removeDirectory(tempDirectoryPath)
       }
+      // 主流程已失败，临时目录清理错误不再向上传播
       catch {
       }
-      loadSpinner.stop("拉取远程仓库失败")
+      loadSpinner.stop("拉取远程仓库失败。")
       if (error instanceof Error) {
-        throw new AppError(AppErrorCode.REMOTE_REPOSITORY_PULL_FAILED_CODE, {
-          cause: error,
-        })
+        throw new AppError(AppErrorCode.REMOTE_REPOSITORY_DOWNLOAD_FAILED_CODE)
       }
       throw error
     }
@@ -87,29 +84,32 @@ class RemoteRepositoryService {
     )
   }
 
-  public static async resetRemoteRepository(): Promise<void> {
+  public static async clearRemoteRepository(): Promise<void> {
     if (RemoteRepositoryService.localRepositoryDirectoryPath === undefined) {
+      RemoteRepositoryService.initRemoteRepositoryPromise = null
       return
     }
 
+    const directoryPath = RemoteRepositoryService.localRepositoryDirectoryPath
+
     try {
-      await removeDirectory(RemoteRepositoryService.localRepositoryDirectoryPath)
+      await removeDirectory(directoryPath)
     }
     catch (error) {
       if (error instanceof Error) {
         throw new AppError(AppErrorCode.DIRECTORY_REMOVE_FAILED_CODE, {
           param: {
-            directoryPath: RemoteRepositoryService.localRepositoryDirectoryPath,
+            directoryPath,
           },
-          cause: error,
         })
       }
 
       throw error
     }
-
-    RemoteRepositoryService.localRepositoryDirectoryPath = undefined
-    RemoteRepositoryService.initRemoteRepositoryPromise = null
+    finally {
+      RemoteRepositoryService.localRepositoryDirectoryPath = undefined
+      RemoteRepositoryService.initRemoteRepositoryPromise = null
+    }
   }
 }
 

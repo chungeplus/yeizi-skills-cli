@@ -2,9 +2,7 @@ import { log, note } from "@clack/prompts"
 import stringWidth from "string-width"
 
 function buildTableColumnMaxWidthList(tableColumnCount: number, tableRowList: string[][]): number[] {
-  const tableColumnMaxWidthList: number[] = Array
-    .from({ length: tableColumnCount }, (_tableColumnValue, tableColumnIndex) => tableColumnIndex)
-    .fill(0)
+  const tableColumnMaxWidthList: number[] = Array.from<number>({ length: tableColumnCount }).fill(0)
 
   tableRowList.forEach((tableColumnList) => {
     tableColumnList.forEach((tableColumnItem, tableColumnIndex) => {
@@ -43,10 +41,15 @@ function renderTableDisplay(tableTitle: string, tableRowList: string[][]): void 
   const tableColumnCount = tableRowList[0].length
   const tableColumnMaxWidthList = buildTableColumnMaxWidthList(tableColumnCount, tableRowList)
   const columnTotalWidthList = tableColumnMaxWidthList.map(
-    tableColumnMaxWidth => tableColumnMaxWidth + COLUMN_GAP_WIDTH,
+    (tableColumnMaxWidth, tableColumnIndex) => {
+      if (tableColumnIndex === tableColumnCount - 1) {
+        return tableColumnMaxWidth
+      }
+      return tableColumnMaxWidth + COLUMN_GAP_WIDTH
+    },
   )
   const formattedRowList = tableRowList.map(tableColumnList =>
-    formatTableColumnList(tableColumnList, columnTotalWidthList).trimEnd(),
+    formatTableColumnList(tableColumnList, columnTotalWidthList),
   )
 
   note(formattedRowList.join("\n"), tableTitle, { withGuide: false })

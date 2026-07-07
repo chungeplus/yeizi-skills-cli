@@ -2,7 +2,8 @@ import type { PlatformList } from "@/types/platform"
 import type { SkillItem, SkillList } from "@/types/skill"
 
 import { readdir } from "node:fs/promises"
-import { RemoteSkillService } from "@/features/skill"
+import { AppError, AppErrorCode } from "@/error"
+import { RemoteSkillService } from "./remote"
 
 async function buildSkillList(skillNameList: string[]): Promise<SkillItem[]> {
   const remoteSkillList = await RemoteSkillService.getRemoteSkillList()
@@ -18,7 +19,18 @@ async function buildInstalledSkillPlatformTableRowList(
 ): Promise<string[][]> {
   const platformInstalledSkillNameEntryList = await Promise.all(
     platformList.map(async ({ platformSkillDirectoryPath, platformName }) => {
-      const platformDirectoryEntryList = await readdir(platformSkillDirectoryPath, { withFileTypes: true })
+      let platformDirectoryEntryList
+      try {
+        platformDirectoryEntryList = await readdir(platformSkillDirectoryPath, { withFileTypes: true })
+      }
+      catch (error) {
+        if (error instanceof Error) {
+          throw new AppError(AppErrorCode.PLATFORM_SKILL_DIRECTORY_INVALID_CODE, {
+            param: { platformName, platformSkillDirectoryPath },
+          })
+        }
+        throw error
+      }
       const installedSkillNameList = platformDirectoryEntryList
         .filter(directoryEntryItem => directoryEntryItem.isDirectory())
         .map(({ name }) => name)

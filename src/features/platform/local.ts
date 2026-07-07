@@ -9,13 +9,11 @@ class LocalPlatformService {
 
   private static localPlatformList: PlatformItem[] | undefined
 
-  private static initLocalPlatformPromise: Promise<[void]> | null = null
+  private static initLocalPlatformPromise: Promise<void> | null = null
 
-  public static async initLocalPlatform(): Promise<[void]> {
+  public static async initLocalPlatform(): Promise<void> {
     if (LocalPlatformService.initLocalPlatformPromise === null) {
-      LocalPlatformService.initLocalPlatformPromise = Promise.all([
-        LocalPlatformService.createLoadLocalPlatformListPromise(),
-      ])
+      LocalPlatformService.initLocalPlatformPromise = LocalPlatformService.createLoadLocalPlatformListPromise()
     }
 
     return LocalPlatformService.initLocalPlatformPromise
@@ -45,6 +43,7 @@ class LocalPlatformService {
           await access(localPlatformItem.platformSkillDirectoryPath)
           localPlatformList.push(localPlatformItem)
         }
+        // 该平台目录不可访问时视为未安装，跳过该项
         catch {
         }
       }),
@@ -75,7 +74,7 @@ class LocalPlatformService {
     return LocalPlatformService.localPlatformList!
   }
 
-  public static async resetLocalPlatform(): Promise<void> {
+  public static async clearLocalPlatform(): Promise<void> {
     LocalPlatformService.localPlatformList = undefined
     LocalPlatformService.initLocalPlatformPromise = null
   }

@@ -1,8 +1,5 @@
 export type {
-  PlatformHomeDirectoryPath,
   PlatformItem,
   PlatformList,
-  PlatformName,
-  PlatformSkillDirectoryPath,
-} from "./common"
+} from "./item"
 export type { LocalPlatformConfig } from "./local"

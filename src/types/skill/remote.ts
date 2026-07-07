@@ -1,9 +1,7 @@
-import type { SkillDescription, SkillName } from "./common"
-
 interface RawSkillEntryFileObject {
-  name: SkillName
+  name: string
 
-  description: SkillDescription
+  description: string
 }
 
 export type { RawSkillEntryFileObject }

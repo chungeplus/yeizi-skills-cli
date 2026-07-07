@@ -1,4 +1,4 @@
-import type { PackageJson } from "@/types/json/package"
+import type { PackageJson } from "@/types/json"
 import { readFile } from "node:fs/promises"
 import { dirname, resolve } from "node:path"
 
@@ -21,22 +21,16 @@ async function loadPackageJson(): Promise<PackageJson> {
   }
   catch (error) {
     if (error instanceof SyntaxError) {
-      throw new AppError(AppErrorCode.PACKAGE_CONFIG_JSON_INVALID_CODE, {
-        cause: error,
-      })
+      throw new AppError(AppErrorCode.PACKAGE_CONFIG_JSON_INVALID_CODE)
     }
 
     if (error instanceof ZodError) {
-      throw new AppError(AppErrorCode.PACKAGE_CONFIG_SCHEMA_INVALID_CODE, {
-        cause: error,
-      })
+      throw new AppError(AppErrorCode.PACKAGE_CONFIG_SCHEMA_INVALID_CODE)
     }
 
     if (error instanceof Error) {
       if ("code" in error && error.code === "ENOENT") {
-        throw new AppError(AppErrorCode.PACKAGE_CONFIG_NOT_FOUND_CODE, {
-          cause: error,
-        })
+        throw new AppError(AppErrorCode.PACKAGE_CONFIG_NOT_FOUND_CODE)
       }
     }
 

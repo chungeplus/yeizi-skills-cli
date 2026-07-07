@@ -1,12 +1,19 @@
+import type { AppErrorCodeType } from "@/types/error"
+
 import process from "node:process"
 
 import { Command, CommanderError } from "commander"
-
 import { InstallCommand } from "@/commands/install"
 import { ListCommand } from "@/commands/list"
-import { AppError, AppErrorCode, handleCommanderErrorToAppError } from "@/error"
+import { AppError, AppErrorCode, buildAppErrorFromCommanderError } from "@/error"
+import { renderErrorDisplay } from "@/features/display"
 import { loadPackageJson } from "@/features/json"
-import { renderErrorDisplay } from "./features/display"
+
+const SILENT_EXIT_APP_ERROR_CODE_LIST: AppErrorCodeType[] = [
+  AppErrorCode.COMMANDER_NORMAL_EXIT_CODE,
+  AppErrorCode.COMMANDER_HELP_DISPLAYED_CODE,
+  AppErrorCode.PROMPT_CANCELLED_CODE,
+]
 
 async function createProgram(): Promise<Command> {
   const packageJsonInfo = await loadPackageJson()
@@ -32,6 +39,10 @@ async function createProgram(): Promise<Command> {
   return program
 }
 
+function isAppError(error: Error): error is AppError {
+  return error instanceof AppError
+}
+
 async function runCli(): Promise<void> {
   try {
     const program = await createProgram()
@@ -41,43 +52,31 @@ async function runCli(): Promise<void> {
     }
     catch (error) {
       if (error instanceof CommanderError) {
-        handleCommanderErrorToAppError(error)
+        buildAppErrorFromCommanderError(error)
       }
-
-      throw error
     }
   }
   catch (error) {
-    if (error instanceof AppError) {
-      if (error.appErrorCode === AppErrorCode.COMMANDER_NORMAL_EXIT_CODE) {
-        process.exitCode = 0
-        return
-      }
+    if (error instanceof Error) {
+      if (isAppError(error)) {
+        if (SILENT_EXIT_APP_ERROR_CODE_LIST.includes(error.appErrorCode)) {
+          process.exitCode = 0
+          return
+        }
 
-      if (error.appErrorCode === AppErrorCode.COMMANDER_HELP_DISPLAYED_CODE) {
-        process.exitCode = 0
-        return
-      }
-
-      if (error.appErrorCode === AppErrorCode.PROMPT_CANCELLED_CODE) {
-        process.exitCode = 0
+        renderErrorDisplay(error.appErrorTitle, error.message)
+        process.exitCode = 1
         return
       }
     }
 
-    if (error instanceof AppError) {
-      renderErrorDisplay(error.appErrorTitle, error.message)
-      process.exitCode = 1
-    }
-    else {
-      const fallbackAppError = new AppError(AppErrorCode.UNEXPECTED_ERROR_CODE, {
-        param: {
-          detailMessage: `捕获到非 Error 异常，异常值类型为 ${typeof error}。`,
-        },
-      })
-      renderErrorDisplay(fallbackAppError.appErrorTitle, fallbackAppError.message)
-      process.exitCode = 1
-    }
+    const fallbackAppError = new AppError(AppErrorCode.UNEXPECTED_ERROR_CODE, {
+      param: {
+        detailMessage: `捕获到非 Error 异常，异常值类型为 ${typeof error}。`,
+      },
+    })
+    renderErrorDisplay(fallbackAppError.appErrorTitle, fallbackAppError.message)
+    process.exitCode = 1
   }
 }
 

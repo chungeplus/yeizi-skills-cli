@@ -22,7 +22,6 @@ const localPlatformConfig: LocalPlatformConfig = {
       localPlatformSkillDirectoryPath: join(userHomeDirectoryPath, ".trae", "skills"),
     },
   ],
-
-} as const
+}
 
 export { localPlatformConfig }

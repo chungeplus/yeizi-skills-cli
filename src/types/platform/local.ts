@@ -1,16 +1,16 @@
 interface LocalPlatformItem {
 
-  readonly localPlatformName: string
+  localPlatformName: string
 
-  readonly localPlatformHomeDirectoryPath: string
+  localPlatformHomeDirectoryPath: string
 
-  readonly localPlatformSkillDirectoryPath: string
+  localPlatformSkillDirectoryPath: string
 
 }
 
 interface LocalPlatformConfig {
 
-  readonly localPlatformList: LocalPlatformItem[]
+  localPlatformList: LocalPlatformItem[]
 
 }
 

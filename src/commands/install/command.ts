@@ -1,8 +1,7 @@
 import type { Command } from "commander"
-import type { CommandOption } from "@/types/commands"
-import type { InstallCommandOption, RawInstallCommandOption } from "@/types/commands/install"
+import type { CommandOption, InstallCommandOption, RawInstallCommandOption } from "@/types/commands"
 import type { PlatformItem } from "@/types/platform"
-import type { SkillItem, SkillName } from "@/types/skill"
+import type { SkillItem } from "@/types/skill"
 
 import { intro, outro } from "@clack/prompts"
 import picocolors from "picocolors"
@@ -18,11 +17,11 @@ import {
 } from "@/features/skill"
 
 class InstallCommand {
-  public readonly commandName = "install"
+  public commandName = "install"
 
-  public readonly commandDescription = "安装技能。"
+  public commandDescription = "安装技能。"
 
-  public readonly commandOptionList: readonly CommandOption[] = [
+  public commandOptionList: CommandOption[] = [
     {
       commandOptionFlag: "--skill <skills>",
       commandOptionDescription: "逗号分隔的技能列表。",
@@ -33,17 +32,16 @@ class InstallCommand {
     try {
       intro(picocolors.inverse(" yeizi-skills "))
 
-      await RemoteSkillService.initRemoteSkill()
-
-      await RemoteRepositoryService.initRemoteRepository()
-
-      await LocalPlatformService.initLocalPlatform()
+      await Promise.all([
+        RemoteSkillService.initRemoteSkill(),
+        LocalPlatformService.initLocalPlatform(),
+      ])
 
       const inputSkillNameList = parseSkillNameList(installCommandOption.rawSkillNameText)
 
       await RemoteSkillService.validateSkillNameListExistInRemoteSkillList(inputSkillNameList)
 
-      let selectedSkillNameList: SkillName[] = inputSkillNameList
+      let selectedSkillNameList: string[] = inputSkillNameList
 
       if (inputSkillNameList.length === 0) {
         selectedSkillNameList = await promptSkillNameList()
@@ -60,11 +58,11 @@ class InstallCommand {
       outro("安装成功！")
     }
     finally {
-      await RemoteSkillService.resetRemoteSkill()
-
-      await RemoteRepositoryService.resetRemoteRepository()
-
-      await LocalPlatformService.resetLocalPlatform()
+      await Promise.allSettled([
+        RemoteSkillService.clearRemoteSkill(),
+        RemoteRepositoryService.clearRemoteRepository(),
+        LocalPlatformService.clearLocalPlatform(),
+      ])
     }
   }
 

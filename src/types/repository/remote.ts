@@ -1,12 +1,12 @@
 interface RemoteRepositoryConfig {
 
-  readonly remoteRepositoryOwner: string
+  remoteRepositoryOwner: string
 
-  readonly remoteRepositoryName: string
+  remoteRepositoryName: string
 
-  readonly remoteRepositoryBranch: string
+  remoteRepositoryBranch: string
 
-  readonly remoteRepositorySkillDirectoryName: string
+  remoteRepositorySkillDirectoryName: string
 
 }
 

@@ -1,17 +1,15 @@
-import type { SkillName } from "@/types/skill"
-
 import { cancel, isCancel, multiselect } from "@clack/prompts"
-import stringWidth from "string-width"
 
 import { AppError, AppErrorCode } from "@/error"
-import { RemoteSkillService } from "@/features/skill"
+import { truncateTextByDisplayWidth } from "@/tools/string"
+import { RemoteSkillService } from "./remote"
 
-async function promptSkillNameList(): Promise<SkillName[]> {
+async function promptSkillNameList(): Promise<string[]> {
   const remoteSkillList = await RemoteSkillService.getRemoteSkillList()
 
   const HINT_MAX_DISPLAY_WIDTH = 80
 
-  const selectedSkillNameList = await multiselect<SkillName>({
+  const selectedSkillNameList = await multiselect<string>({
     message: "要安装哪些技能？",
     options: remoteSkillList.map((skillItem) => {
       const truncatedSkillDescriptionHint = truncateTextByDisplayWidth(
@@ -34,22 +32,6 @@ async function promptSkillNameList(): Promise<SkillName[]> {
   }
 
   return selectedSkillNameList
-}
-
-function truncateTextByDisplayWidth(sourceText: string, maxDisplayWidth: number): string {
-  const ellipsisText = "…"
-  const ellipsisDisplayWidth = stringWidth(ellipsisText)
-  const sourceTextMaxDisplayWidth = maxDisplayWidth - ellipsisDisplayWidth
-  const sourceTextCodePointList = Array.from(sourceText)
-  let currentDisplayWidth = 0
-  const truncatedCodePointIndex = sourceTextCodePointList.findIndex((codePoint) => {
-    currentDisplayWidth += stringWidth(codePoint)
-    return currentDisplayWidth > sourceTextMaxDisplayWidth
-  })
-  if (truncatedCodePointIndex === -1) {
-    return sourceText
-  }
-  return sourceTextCodePointList.slice(0, truncatedCodePointIndex).join("") + ellipsisText
 }
 
 export { promptSkillNameList }

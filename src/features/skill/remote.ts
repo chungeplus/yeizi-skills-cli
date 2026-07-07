@@ -1,26 +1,25 @@
-import type { SkillItem, SkillName } from "@/types/skill"
+import type { SkillItem } from "@/types/skill"
 
 import { readdir, readFile } from "node:fs/promises"
 import { join } from "node:path"
 
 import matter from "gray-matter"
+import { ZodError } from "zod"
 
 import { AppError, AppErrorCode } from "@/error"
 import { RemoteRepositoryService } from "@/features/repository"
-import { skillEntryFileObjectSchema } from "@/schemas/skill/remote"
+import { skillEntryFileObjectSchema } from "@/schemas/skill"
 
 const SKILL_ENTRY_FILE_NAME = "SKILL.md"
 
 class RemoteSkillService {
   private static remoteSkillList: SkillItem[] | undefined
 
-  private static initRemoteSkillPromise: Promise<[void]> | null = null
+  private static initRemoteSkillPromise: Promise<void> | null = null
 
-  public static async initRemoteSkill(): Promise<[void]> {
+  public static async initRemoteSkill(): Promise<void> {
     if (RemoteSkillService.initRemoteSkillPromise === null) {
-      RemoteSkillService.initRemoteSkillPromise = Promise.all([
-        RemoteSkillService.createLoadRemoteSkillListPromise(),
-      ])
+      RemoteSkillService.initRemoteSkillPromise = RemoteSkillService.createLoadRemoteSkillListPromise()
     }
 
     return RemoteSkillService.initRemoteSkillPromise
@@ -34,7 +33,18 @@ class RemoteSkillService {
   private static async loadRemoteSkillList(): Promise<SkillItem[]> {
     const remoteSkillDirectoryPath = await RemoteRepositoryService.getLocalRepositorySkillDirectoryPath()
 
-    const remoteSkillDirectoryEntryList = await readdir(remoteSkillDirectoryPath, { withFileTypes: true })
+    let remoteSkillDirectoryEntryList
+    try {
+      remoteSkillDirectoryEntryList = await readdir(remoteSkillDirectoryPath, { withFileTypes: true })
+    }
+    catch (error) {
+      if (error instanceof Error) {
+        throw new AppError(AppErrorCode.REMOTE_SKILL_DIRECTORY_INVALID_CODE, {
+          param: { remoteSkillDirectoryPath },
+        })
+      }
+      throw error
+    }
 
     const remoteSkillSubdirectoryEntryList = remoteSkillDirectoryEntryList.filter(
       remoteSkillDirectoryEntryItem => remoteSkillDirectoryEntryItem.isDirectory(),
@@ -44,13 +54,30 @@ class RemoteSkillService {
       remoteSkillSubdirectoryEntryList.map(async (remoteSkillDirectoryEntryItem) => {
         const skillEntryFilePath = join(remoteSkillDirectoryPath, remoteSkillDirectoryEntryItem.name, SKILL_ENTRY_FILE_NAME)
 
-        const rawSkillEntryFileText = await readFile(skillEntryFilePath, "utf-8")
+        try {
+          const rawSkillEntryFileText = await readFile(skillEntryFilePath, "utf-8")
 
-        const rawSkillEntryFileObject = skillEntryFileObjectSchema.parse(matter(rawSkillEntryFileText).data)
+          const rawSkillEntryFileObject = skillEntryFileObjectSchema.parse(matter(rawSkillEntryFileText).data)
 
-        return {
-          skillName: rawSkillEntryFileObject.name,
-          skillDescription: rawSkillEntryFileObject.description,
+          return {
+            skillName: rawSkillEntryFileObject.name,
+            skillDescription: rawSkillEntryFileObject.description,
+          }
+        }
+        catch (error) {
+          if (error instanceof ZodError) {
+            throw new AppError(AppErrorCode.REMOTE_SKILL_ENTRY_INVALID_CODE, {
+              param: { skillEntryFilePath },
+            })
+          }
+
+          if (error instanceof Error && "code" in error && error.code === "ENOENT") {
+            throw new AppError(AppErrorCode.REMOTE_SKILL_ENTRY_MISSING_CODE, {
+              param: { skillEntryFilePath },
+            })
+          }
+
+          throw error
         }
       }),
     )
@@ -66,7 +93,7 @@ class RemoteSkillService {
     return remoteSkillList
   }
 
-  public static async validateSkillNameListExistInRemoteSkillList(skillNameList: SkillName[]): Promise<void> {
+  public static async validateSkillNameListExistInRemoteSkillList(skillNameList: string[]): Promise<void> {
     await RemoteSkillService.initRemoteSkill()
 
     const notExistSkillNameList = skillNameList.filter(skillName =>
@@ -74,7 +101,7 @@ class RemoteSkillService {
     )
 
     if (notExistSkillNameList.length > 0) {
-      throw new AppError(AppErrorCode.SKILL_NOT_FOUND_CODE, {
+      throw new AppError(AppErrorCode.REMOTE_SKILL_NOT_FOUND_CODE, {
         param: { skillNameList: notExistSkillNameList },
       })
     }
@@ -86,7 +113,7 @@ class RemoteSkillService {
     return RemoteSkillService.remoteSkillList!
   }
 
-  public static async resetRemoteSkill(): Promise<void> {
+  public static async clearRemoteSkill(): Promise<void> {
     RemoteSkillService.remoteSkillList = undefined
     RemoteSkillService.initRemoteSkillPromise = null
   }

@@ -1,14 +1,12 @@
-import type { PlatformName } from "@/types/platform"
-
 import { cancel, isCancel, multiselect } from "@clack/prompts"
 
 import { AppError, AppErrorCode } from "@/error"
-import { LocalPlatformService } from "@/features/platform"
+import { LocalPlatformService } from "./local"
 
-async function promptPlatformNameList(): Promise<PlatformName[]> {
+async function promptPlatformNameList(): Promise<string[]> {
   const localPlatformList = await LocalPlatformService.getLocalPlatformList()
 
-  const selectedPlatformNameList = await multiselect<PlatformName>({
+  const selectedPlatformNameList = await multiselect<string>({
     message: "要安装到哪些平台？",
     options: localPlatformList.map(platformItem => ({
       value: platformItem.platformName,

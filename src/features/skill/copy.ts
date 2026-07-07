@@ -35,12 +35,11 @@ async function copySkillItemToPlatformItem(
   }
   catch (error) {
     if (error instanceof Error) {
-      throw new AppError(AppErrorCode.FILE_COPY_FAILED_CODE, {
+      throw new AppError(AppErrorCode.SKILL_COPY_FAILED_CODE, {
         param: {
-          sourcePath: skillSourceDirectoryPath,
-          targetPath: targetSkillDirectoryPath,
+          sourceDirectoryPath: skillSourceDirectoryPath,
+          targetDirectoryPath: targetSkillDirectoryPath,
         },
-        cause: error,
       })
     }
 

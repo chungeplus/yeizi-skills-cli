@@ -1,2 +1,2 @@
-export type { SkillDescription, SkillItem, SkillList, SkillName } from "./common"
+export type { SkillItem, SkillList } from "./item"
 export type { RawSkillEntryFileObject } from "./remote"
