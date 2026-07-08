@@ -10,13 +10,28 @@ import { AppError, AppErrorCode } from "@/error"
 import { RemoteRepositoryService } from "@/features/repository"
 import { skillEntryFileObjectSchema } from "@/schemas/skill"
 
+/**
+ * 技能条目入口文件名。
+ */
 const SKILL_ENTRY_FILE_NAME = "SKILL.md"
 
+/**
+ * 远端技能服务。读取远端仓库中的技能元数据列表，供 add/list 命令按名查找。
+ */
 class RemoteSkillService {
   private static remoteSkillList: SkillItem[] | undefined
 
   private static initRemoteSkillPromise: Promise<void> | null = null
 
+  /**
+   * 加载远端技能列表。
+   *
+   * @throws AppError (AppErrorCode.REMOTE_REPOSITORY_DOWNLOAD_FAILED_CODE) - 当远端仓库下载失败时
+   * @throws AppError (AppErrorCode.REMOTE_SKILL_DIRECTORY_INVALID_CODE) - 当技能子目录读取失败时
+   * @throws AppError (AppErrorCode.REMOTE_SKILL_ENTRY_INVALID_CODE) - 当技能条目解析不通过 `skillEntryFileObjectSchema` 时
+   * @throws AppError (AppErrorCode.REMOTE_SKILL_ENTRY_MISSING_CODE) - 当技能子目录下缺少 `SKILL.md` 时
+   * @throws AppError (AppErrorCode.REMOTE_SKILL_EMPTY_CODE) - 当技能子目录下没有任何技能子目录时
+   */
   public static async initRemoteSkill(): Promise<void> {
     if (RemoteSkillService.initRemoteSkillPromise === null) {
       RemoteSkillService.initRemoteSkillPromise = RemoteSkillService.createLoadRemoteSkillListPromise()
@@ -25,11 +40,23 @@ class RemoteSkillService {
     return RemoteSkillService.initRemoteSkillPromise
   }
 
+  /**
+   * 创建懒加载远端技能列表的 Promise，避免并发重复加载。
+   */
   private static async createLoadRemoteSkillListPromise(): Promise<void> {
     const remoteSkillList = await RemoteSkillService.loadRemoteSkillList()
     RemoteSkillService.remoteSkillList = remoteSkillList
   }
 
+  /**
+   * 读取远端技能列表。
+   *
+   * @returns 技能列表
+   * @throws AppError (AppErrorCode.REMOTE_SKILL_DIRECTORY_INVALID_CODE) - 当技能子目录读取失败时
+   * @throws AppError (AppErrorCode.REMOTE_SKILL_ENTRY_INVALID_CODE) - 当技能条目解析不通过 `skillEntryFileObjectSchema` 时
+   * @throws AppError (AppErrorCode.REMOTE_SKILL_ENTRY_MISSING_CODE) - 当技能子目录下缺少 `SKILL.md` 时
+   * @throws AppError (AppErrorCode.REMOTE_SKILL_EMPTY_CODE) - 当技能子目录下没有任何技能子目录时
+   */
   private static async loadRemoteSkillList(): Promise<SkillItem[]> {
     const remoteSkillDirectoryPath = await RemoteRepositoryService.getLocalRepositorySkillDirectoryPath()
 
@@ -93,6 +120,17 @@ class RemoteSkillService {
     return remoteSkillList
   }
 
+  /**
+   * 校验给定技能名列表是否都存在于远端技能列表中。
+   *
+   * @param skillNameList - 技能名列表
+   * @throws AppError (AppErrorCode.REMOTE_REPOSITORY_DOWNLOAD_FAILED_CODE) - 当远端仓库下载失败时
+   * @throws AppError (AppErrorCode.REMOTE_SKILL_DIRECTORY_INVALID_CODE) - 当技能子目录读取失败时
+   * @throws AppError (AppErrorCode.REMOTE_SKILL_ENTRY_INVALID_CODE) - 当技能条目解析不通过 `skillEntryFileObjectSchema` 时
+   * @throws AppError (AppErrorCode.REMOTE_SKILL_ENTRY_MISSING_CODE) - 当技能子目录下缺少 `SKILL.md` 时
+   * @throws AppError (AppErrorCode.REMOTE_SKILL_EMPTY_CODE) - 当远端仓库无任何技能时
+   * @throws AppError (AppErrorCode.REMOTE_SKILL_NOT_FOUND_CODE) - 当任一技能名不在远端列表中时
+   */
   public static async validateSkillNameListExistInRemoteSkillList(skillNameList: string[]): Promise<void> {
     await RemoteSkillService.initRemoteSkill()
 
@@ -107,12 +145,25 @@ class RemoteSkillService {
     }
   }
 
+  /**
+   * 读取远端技能列表。
+   *
+   * @returns 远端技能列表
+   * @throws AppError (AppErrorCode.REMOTE_REPOSITORY_DOWNLOAD_FAILED_CODE) - 当远端仓库下载失败时
+   * @throws AppError (AppErrorCode.REMOTE_SKILL_DIRECTORY_INVALID_CODE) - 当技能子目录读取失败时
+   * @throws AppError (AppErrorCode.REMOTE_SKILL_ENTRY_INVALID_CODE) - 当技能条目解析不通过 `skillEntryFileObjectSchema` 时
+   * @throws AppError (AppErrorCode.REMOTE_SKILL_ENTRY_MISSING_CODE) - 当技能子目录下缺少 `SKILL.md` 时
+   * @throws AppError (AppErrorCode.REMOTE_SKILL_EMPTY_CODE) - 当远端仓库中没有任何技能时
+   */
   public static async getRemoteSkillList(): Promise<SkillItem[]> {
     await RemoteSkillService.initRemoteSkill()
 
     return RemoteSkillService.remoteSkillList!
   }
 
+  /**
+   * 重置已加载的远端技能列表。
+   */
   public static async clearRemoteSkill(): Promise<void> {
     RemoteSkillService.remoteSkillList = undefined
     RemoteSkillService.initRemoteSkillPromise = null

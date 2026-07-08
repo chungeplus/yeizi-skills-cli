@@ -12,13 +12,24 @@ import {
   RemoteSkillService,
 } from "@/features/skill"
 
+/**
+ * 展示当前已添加到各本地平台的技能清单。
+ */
 class ListCommand {
   public commandName = "list"
 
+  /**
+   * 命令帮助描述。
+   */
   public commandDescription = "查看技能列表。"
 
   public commandOptionList: CommandOption[] = []
 
+  /**
+   * 展示已添加到各本地平台的技能清单。
+   *
+   * @param _listCommandOption - list 命令选项。
+   */
   public async execute(_listCommandOption: ListCommandOption): Promise<void> {
     try {
       intro(picocolors.inverse(" yeizi-skills "))
@@ -48,6 +59,11 @@ class ListCommand {
     }
   }
 
+  /**
+   * 注册 `list` 命令。
+   *
+   * @param program - 根命令对象
+   */
   public register(program: Command): void {
     const listCommand = program.command(this.commandName).description(this.commandDescription)
 

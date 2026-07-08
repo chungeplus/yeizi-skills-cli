@@ -16,9 +16,15 @@ import {
   RemoteSkillService,
 } from "@/features/skill"
 
+/**
+ * 添加技能到所选平台目录。
+ */
 class AddCommand {
   public commandName = "add"
 
+  /**
+   * 命令帮助描述。
+   */
   public commandDescription = "添加技能。"
 
   public commandOptionList: CommandOption[] = [
@@ -28,6 +34,11 @@ class AddCommand {
     },
   ]
 
+  /**
+   * 把所选技能复制到所选平台目录。
+   *
+   * @param addCommandOption - 命令参数
+   */
   public async execute(addCommandOption: AddCommandOption): Promise<void> {
     try {
       intro(picocolors.inverse(" yeizi-skills "))
@@ -66,6 +77,11 @@ class AddCommand {
     }
   }
 
+  /**
+   * 注册 `add` 命令。
+   *
+   * @param program - 根命令对象
+   */
   public register(program: Command): void {
     const addCommand = program.command(this.commandName).description(this.commandDescription)
 

@@ -4,6 +4,9 @@ import { access } from "node:fs/promises"
 import { localPlatformConfig } from "@/config/platform"
 import { AppError, AppErrorCode } from "@/error"
 
+/**
+ * 本地平台服务。枚举可安装的本地平台目录，供 add/list 命令按名查找。
+ */
 class LocalPlatformService {
   private static localPlatformConfig: LocalPlatformConfig = localPlatformConfig
 
@@ -11,6 +14,11 @@ class LocalPlatformService {
 
   private static initLocalPlatformPromise: Promise<void> | null = null
 
+  /**
+   * 探测本地平台目录。
+   *
+   * @throws AppError (AppErrorCode.PLATFORM_NOT_FOUND_CODE) - 配置平台均不可访问时
+   */
   public static async initLocalPlatform(): Promise<void> {
     if (LocalPlatformService.initLocalPlatformPromise === null) {
       LocalPlatformService.initLocalPlatformPromise = LocalPlatformService.createLoadLocalPlatformListPromise()
@@ -19,12 +27,21 @@ class LocalPlatformService {
     return LocalPlatformService.initLocalPlatformPromise
   }
 
+  /**
+   * 创建懒加载本地平台列表的 Promise。
+   */
   private static async createLoadLocalPlatformListPromise(): Promise<void> {
     const localPlatformList = await LocalPlatformService.loadLocalPlatformList()
 
     LocalPlatformService.localPlatformList = localPlatformList
   }
 
+  /**
+   * 探测本地平台目录。不可访问的平台项会被直接排除（视为"未安装"）；仅在全部不可访问时抛错。
+   *
+   * @returns 平台列表
+   * @throws AppError (AppErrorCode.PLATFORM_NOT_FOUND_CODE) - 配置平台均不可访问时
+   */
   private static async loadLocalPlatformList(): Promise<PlatformItem[]> {
     const tempLocalPlatformList: PlatformItem[] = LocalPlatformService
       .localPlatformConfig
@@ -68,12 +85,21 @@ class LocalPlatformService {
     return localPlatformList
   }
 
+  /**
+   * 读取本地平台列表。
+   *
+   * @returns 平台列表
+   * @throws AppError (AppErrorCode.PLATFORM_NOT_FOUND_CODE) - 当配置平台均不可访问时
+   */
   public static async getLocalPlatformList(): Promise<PlatformItem[]> {
     await LocalPlatformService.initLocalPlatform()
 
     return LocalPlatformService.localPlatformList!
   }
 
+  /**
+   * 重置已发现的本地平台列表。
+   */
   public static async clearLocalPlatform(): Promise<void> {
     LocalPlatformService.localPlatformList = undefined
     LocalPlatformService.initLocalPlatformPromise = null

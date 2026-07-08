@@ -1,5 +1,14 @@
 import { z } from "zod"
 
+/**
+ * 校验技能名列表的 CSV 原始文本。
+ *
+ * @example
+ * ```typescript
+ * rawSkillNameTextSchema.parse("web,api,cli")
+ * rawSkillNameTextSchema.parse(" a , b ")
+ * ```
+ */
 const rawSkillNameTextSchema = z.string().refine(
   (rawSkillNameText) => {
     return rawSkillNameText.split(",").every(csvSegment => csvSegment.trim().length > 0)

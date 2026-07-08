@@ -5,6 +5,9 @@ import type {
 } from "@/types/error"
 import { AppErrorCode } from "./code"
 
+/**
+ * 按错误码提供错误信息。
+ */
 const appErrorDefinitionMap: AppErrorDefinitionMap = {
   [AppErrorCode.COMMANDER_NORMAL_EXIT_CODE]: {
     appErrorTitle: "命令已结束",
@@ -164,8 +167,20 @@ const appErrorDefinitionMap: AppErrorDefinitionMap = {
   },
 }
 
-function getAppErrorDefinition<T extends AppErrorCodeType>(code: T): AppErrorDefinition<T> {
-  return appErrorDefinitionMap[code]
+/**
+ * 按错误码取出对应的错误信息。
+ *
+ * @param appErrorCode - 错误码字面量。
+ * @returns 对应错误码的错误定义对象
+ *
+ * @example
+ * ```typescript
+ * const definition = getAppErrorDefinition(AppErrorCode.PLATFORM_NOT_FOUND_CODE) // { appErrorTitle: "平台不存在", buildAppErrorMessage: [Function] }
+ * definition.buildAppErrorMessage({ platformNameList: ["vscode"] }) // "以下平台不存在：vscode。"
+ * ```
+ */
+function getAppErrorDefinition<T extends AppErrorCodeType>(appErrorCode: T): AppErrorDefinition<T> {
+  return appErrorDefinitionMap[appErrorCode]
 }
 
 export { getAppErrorDefinition }

@@ -1,3 +1,6 @@
+/**
+ * 应用错误码。
+ */
 type AppErrorCodeType
   = | "commander_normal_exit_code"
     | "commander_help_displayed_code"
