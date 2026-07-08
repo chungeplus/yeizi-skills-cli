@@ -94,7 +94,11 @@ class LocalPlatformService {
   public static async getLocalPlatformList(): Promise<PlatformItem[]> {
     await LocalPlatformService.initLocalPlatform()
 
-    return LocalPlatformService.localPlatformList!
+    if (LocalPlatformService.localPlatformList === undefined) {
+      throw new AppError(AppErrorCode.LOCAL_PLATFORM_LIST_NOT_LOADED_CODE)
+    }
+
+    return LocalPlatformService.localPlatformList
   }
 
   /**

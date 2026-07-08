@@ -134,8 +134,14 @@ class RemoteSkillService {
   public static async validateSkillNameListExistInRemoteSkillList(skillNameList: string[]): Promise<void> {
     await RemoteSkillService.initRemoteSkill()
 
+    if (RemoteSkillService.remoteSkillList === undefined) {
+      throw new AppError(AppErrorCode.REMOTE_SKILL_LIST_NOT_LOADED_CODE)
+    }
+
+    const remoteSkillList = RemoteSkillService.remoteSkillList
+
     const notExistSkillNameList = skillNameList.filter(skillName =>
-      !RemoteSkillService.remoteSkillList!.some(skillItem => skillItem.skillName === skillName),
+      !remoteSkillList.some(skillItem => skillItem.skillName === skillName),
     )
 
     if (notExistSkillNameList.length > 0) {
@@ -158,7 +164,11 @@ class RemoteSkillService {
   public static async getRemoteSkillList(): Promise<SkillItem[]> {
     await RemoteSkillService.initRemoteSkill()
 
-    return RemoteSkillService.remoteSkillList!
+    if (RemoteSkillService.remoteSkillList === undefined) {
+      throw new AppError(AppErrorCode.REMOTE_SKILL_LIST_NOT_LOADED_CODE)
+    }
+
+    return RemoteSkillService.remoteSkillList
   }
 
   /**

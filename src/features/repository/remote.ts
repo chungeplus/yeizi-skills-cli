@@ -100,7 +100,11 @@ class RemoteRepositoryService {
   public static async getLocalRepositoryDirectoryPath(): Promise<string> {
     await RemoteRepositoryService.initRemoteRepository()
 
-    return RemoteRepositoryService.localRepositoryDirectoryPath!
+    if (RemoteRepositoryService.localRepositoryDirectoryPath === undefined) {
+      throw new AppError(AppErrorCode.REMOTE_REPOSITORY_NOT_LOADED_CODE)
+    }
+
+    return RemoteRepositoryService.localRepositoryDirectoryPath
   }
 
   /**
@@ -112,8 +116,12 @@ class RemoteRepositoryService {
   public static async getLocalRepositorySkillDirectoryPath(): Promise<string> {
     await RemoteRepositoryService.initRemoteRepository()
 
+    if (RemoteRepositoryService.localRepositoryDirectoryPath === undefined) {
+      throw new AppError(AppErrorCode.REMOTE_REPOSITORY_NOT_LOADED_CODE)
+    }
+
     return join(
-      RemoteRepositoryService.localRepositoryDirectoryPath!,
+      RemoteRepositoryService.localRepositoryDirectoryPath,
       RemoteRepositoryService.remoteRepositoryConfig.remoteRepositorySkillDirectoryName,
     )
   }

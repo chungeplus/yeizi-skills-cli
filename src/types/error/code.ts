@@ -27,5 +27,8 @@ type AppErrorCodeType
     | "skill_copy_failed_code"
     | "prompt_cancelled_code"
     | "directory_remove_failed_code"
+    | "remote_repository_not_loaded_code"
+    | "remote_skill_list_not_loaded_code"
+    | "local_platform_list_not_loaded_code"
 
 export type { AppErrorCodeType }

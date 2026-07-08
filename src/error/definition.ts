@@ -165,6 +165,24 @@ const appErrorDefinitionMap: AppErrorDefinitionMap = {
       return "已取消本次操作。"
     },
   },
+  [AppErrorCode.REMOTE_REPOSITORY_NOT_LOADED_CODE]: {
+    appErrorTitle: "远端仓库尚未加载",
+    buildAppErrorMessage(): string {
+      return "远端仓库本地目录路径尚未加载完成。"
+    },
+  },
+  [AppErrorCode.REMOTE_SKILL_LIST_NOT_LOADED_CODE]: {
+    appErrorTitle: "远端技能列表尚未加载",
+    buildAppErrorMessage(): string {
+      return "远端技能列表尚未加载完成。"
+    },
+  },
+  [AppErrorCode.LOCAL_PLATFORM_LIST_NOT_LOADED_CODE]: {
+    appErrorTitle: "本地平台列表尚未加载",
+    buildAppErrorMessage(): string {
+      return "本地平台列表尚未加载完成。"
+    },
+  },
 }
 
 /**

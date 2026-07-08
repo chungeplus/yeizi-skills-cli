@@ -5,7 +5,7 @@ import { splitCsvString } from "@/tools/string"
 /**
  * 解析 `--skill` 选项技能名列表。
  *
- * @param rawSkillNameText - `--skill` 选项原始文本
+ * @param rawSkillNameText - `--skill` 选项原始文本。
  * @returns 技能名列表
  * @throws AppError (AppErrorCode.SKILL_OPTION_INVALID_FORMAT_CODE) - 当输入格式不合法时
  *

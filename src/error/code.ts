@@ -102,6 +102,18 @@ const AppErrorCode = {
    * 删除已下载目录失败。
    */
   DIRECTORY_REMOVE_FAILED_CODE: "directory_remove_failed_code",
+  /**
+   * 远端仓库尚未加载。
+   */
+  REMOTE_REPOSITORY_NOT_LOADED_CODE: "remote_repository_not_loaded_code",
+  /**
+   * 远端技能列表尚未加载。
+   */
+  REMOTE_SKILL_LIST_NOT_LOADED_CODE: "remote_skill_list_not_loaded_code",
+  /**
+   * 本地平台列表尚未加载。
+   */
+  LOCAL_PLATFORM_LIST_NOT_LOADED_CODE: "local_platform_list_not_loaded_code",
 } as const
 
 /**

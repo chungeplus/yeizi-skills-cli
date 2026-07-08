@@ -114,6 +114,18 @@ interface AppErrorParamMap {
    * 删除目录失败。
    */
   directory_remove_failed_code: { directoryPath: string }
+  /**
+   * 远端仓库尚未加载。
+   */
+  remote_repository_not_loaded_code: undefined
+  /**
+   * 远端技能列表尚未加载。
+   */
+  remote_skill_list_not_loaded_code: undefined
+  /**
+   * 本地平台列表尚未加载。
+   */
+  local_platform_list_not_loaded_code: undefined
 }
 
 /**
