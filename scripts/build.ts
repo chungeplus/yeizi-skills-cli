@@ -7,7 +7,7 @@ async function runBuild(): Promise<void> {
     entrypoints: ["./src/bin/cli.ts"],
     outdir: "./dist",
     naming: "index.[ext]",
-    target: "bun",
+    target: "node",
     format: "esm",
   })
 
