@@ -13,7 +13,7 @@ interface AppErrorDefinition<T extends AppErrorCodeType = AppErrorCodeType> {
   /**
    * 拼装错误消息。
    */
-  buildAppErrorMessage: (appErrorParam: AppErrorParam<T>) => string
+  buildAppErrorMessage: (appErrorParam?: AppErrorParam<T>) => string
 }
 
 /**

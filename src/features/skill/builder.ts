@@ -15,6 +15,7 @@ import { RemoteSkillService } from "./remote"
  * @throws AppError (AppErrorCode.REMOTE_SKILL_ENTRY_INVALID_CODE) - 当技能条目 frontmatter 不合法时
  * @throws AppError (AppErrorCode.REMOTE_SKILL_ENTRY_MISSING_CODE) - 当技能子目录下缺少 SKILL.md 时
  * @throws AppError (AppErrorCode.REMOTE_SKILL_EMPTY_CODE) - 当远端仓库中没有任何技能时
+ * @throws AppError (AppErrorCode.REMOTE_SKILL_NOT_FOUND_CODE) - 当任一技能名不在远端列表中时
  *
  * @example
  * ```typescript
@@ -23,9 +24,31 @@ import { RemoteSkillService } from "./remote"
  */
 async function buildSkillList(skillNameList: string[]): Promise<SkillItem[]> {
   const remoteSkillList = await RemoteSkillService.getRemoteSkillList()
-  const skillList = skillNameList.map(
-    skillName => remoteSkillList.find(remoteSkillItem => remoteSkillItem.skillName === skillName)!,
+
+  const notFoundSkillNameList = skillNameList.filter(skillName =>
+    !remoteSkillList.some(remoteSkillItem => remoteSkillItem.skillName === skillName),
   )
+
+  if (notFoundSkillNameList.length > 0) {
+    throw new AppError(AppErrorCode.REMOTE_SKILL_NOT_FOUND_CODE, {
+      param: { skillNameList: notFoundSkillNameList },
+    })
+  }
+
+  const skillList: SkillItem[] = []
+
+  skillNameList.forEach((skillName) => {
+    const skillItem = remoteSkillList.find(remoteSkillItem => remoteSkillItem.skillName === skillName)
+
+    if (skillItem === undefined) {
+      throw new AppError(AppErrorCode.REMOTE_SKILL_NOT_FOUND_CODE, {
+        param: { skillNameList: [skillName] },
+      })
+    }
+
+    skillList.push(skillItem)
+  })
+
   return skillList
 }
 

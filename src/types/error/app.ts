@@ -5,7 +5,7 @@ import type { AppErrorCodeType } from "./code"
  */
 interface AppErrorOption<T extends AppErrorCodeType> {
   /**
-   * 错误参数载荷。
+   * 错误参数载荷。无参错误码不需要传。
    */
   param?: AppErrorParam<T>
 }
@@ -126,6 +126,10 @@ interface AppErrorParamMap {
    * 本地平台列表尚未加载。
    */
   local_platform_list_not_loaded_code: undefined
+  /**
+   * 错误码缺少必填 param 参数（编程错误）。
+   */
+  app_error_param_missing_code: { appErrorCode: string }
 }
 
 /**

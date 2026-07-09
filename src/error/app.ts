@@ -22,11 +22,9 @@ class AppError<T extends AppErrorCodeType = AppErrorCodeType> extends Error {
    * @param appErrorOption - 错误参数载荷。
    */
   public constructor(appErrorCode: T, appErrorOption?: AppErrorOption<T>) {
-    const appErrorParam = appErrorOption?.param
-
     const definition = getAppErrorDefinition(appErrorCode)
 
-    super(definition.buildAppErrorMessage(appErrorParam!))
+    super(definition.buildAppErrorMessage(appErrorOption?.param))
 
     this.name = new.target.name
     this.appErrorCode = appErrorCode

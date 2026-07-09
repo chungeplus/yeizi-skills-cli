@@ -30,5 +30,6 @@ type AppErrorCodeType
     | "remote_repository_not_loaded_code"
     | "remote_skill_list_not_loaded_code"
     | "local_platform_list_not_loaded_code"
+    | "app_error_param_missing_code"
 
 export type { AppErrorCodeType }

@@ -114,6 +114,10 @@ const AppErrorCode = {
    * 本地平台列表尚未加载。
    */
   LOCAL_PLATFORM_LIST_NOT_LOADED_CODE: "local_platform_list_not_loaded_code",
+  /**
+   * 错误码缺少必填 param 参数（编程错误）。
+   */
+  APP_ERROR_PARAM_MISSING_CODE: "app_error_param_missing_code",
 } as const
 
 /**
