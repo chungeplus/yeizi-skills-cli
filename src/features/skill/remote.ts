@@ -164,7 +164,6 @@ class RemoteSkillService {
     RemoteSkillService.remoteSkillList = undefined
     RemoteSkillService.initRemoteSkillPromise = null
   }
-
 }
 
 export { RemoteSkillService }

@@ -1,7 +1,5 @@
 import type { Command } from "commander"
 import type { CommandOption, ListCommandOption, RawListCommandOption } from "@/types/commands"
-import type { PlatformList } from "@/types/platform"
-import type { SkillList } from "@/types/skill"
 
 import { intro } from "@clack/prompts"
 import picocolors from "picocolors"
