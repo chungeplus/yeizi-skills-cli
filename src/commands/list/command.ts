@@ -1,5 +1,7 @@
 import type { Command } from "commander"
 import type { CommandOption, ListCommandOption, RawListCommandOption } from "@/types/commands"
+import type { PlatformList } from "@/types/platform"
+import type { SkillList } from "@/types/skill"
 
 import { intro } from "@clack/prompts"
 import picocolors from "picocolors"
@@ -7,10 +9,7 @@ import picocolors from "picocolors"
 import { renderTableDisplay } from "@/features/display"
 import { LocalPlatformService } from "@/features/platform"
 import { RemoteRepositoryService } from "@/features/repository"
-import {
-  buildAddedSkillPlatformTableRowList,
-  RemoteSkillService,
-} from "@/features/skill"
+import { buildAddedSkillPlatformList, RemoteSkillService } from "@/features/skill"
 
 /**
  * 展示当前已添加到各本地平台的技能清单。
@@ -23,7 +22,35 @@ class ListCommand {
    */
   public commandDescription = "查看技能列表。"
 
+  /**
+   * 命令选项列表。
+   */
   public commandOptionList: CommandOption[] = []
+
+  /**
+   * 按技能列表与平台列表生成「技能 → 已添加平台」表格行。
+   *
+   * @returns 表格行列表（不含表头）
+   *
+   * @example
+   * ```typescript
+   * const rowList = await this.buildAddedSkillPlatformTableRowList(skillList, platformList) // [["web", "codex"], ["api", "claude"]]
+   * ```
+   */
+  private async buildAddedSkillPlatformTableRowList(
+
+  ): Promise<string[][]> {
+    const remoteSkillList = await RemoteSkillService.getRemoteSkillList()
+
+    const localPlatformList = await LocalPlatformService.getLocalPlatformList()
+
+    const addedSkillPlatformList = await buildAddedSkillPlatformList(remoteSkillList, localPlatformList)
+
+    return addedSkillPlatformList.map(({ skillName, addedPlatformNameList }) => [
+      skillName,
+      addedPlatformNameList.join(", "),
+    ])
+  }
 
   /**
    * 展示已添加到各本地平台的技能清单。
@@ -34,19 +61,14 @@ class ListCommand {
     try {
       intro(picocolors.inverse(" yeizi-skills "))
 
+      await RemoteRepositoryService.initRemoteRepository()
+
       await Promise.all([
         RemoteSkillService.initRemoteSkill(),
         LocalPlatformService.initLocalPlatform(),
       ])
 
-      const remoteSkillList = await RemoteSkillService.getRemoteSkillList()
-
-      const localPlatformList = await LocalPlatformService.getLocalPlatformList()
-
-      const addedSkillPlatformTableRowList = await buildAddedSkillPlatformTableRowList(
-        remoteSkillList,
-        localPlatformList,
-      )
+      const addedSkillPlatformTableRowList = await this.buildAddedSkillPlatformTableRowList()
 
       renderTableDisplay("已添加技能列表：", addedSkillPlatformTableRowList)
     }

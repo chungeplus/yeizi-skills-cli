@@ -1,8 +1,10 @@
+export { addSkillListToPlatformList } from "./add"
 export {
-  buildAddedSkillPlatformTableRowList,
-  buildSkillList,
+  buildAddedSkillPlatformList,
+  buildRemoteSkillListBySkillNameList,
 } from "./builder"
-export { copySkillListToPlatformList } from "./copy"
 export { parseSkillNameList } from "./parser"
-export { promptSkillNameList } from "./prompt"
 export { RemoteSkillService } from "./remote"
+export {
+  removeSkillListFromPlatformList,
+} from "./remove"

@@ -103,13 +103,21 @@ interface AppErrorParamMap {
    */
   skill_option_invalid_format_code: { rawSkillNameText: string }
   /**
-   * 技能复制失败。
+   * 技能添加失败。
    */
-  skill_copy_failed_code: { sourceDirectoryPath: string, targetDirectoryPath: string }
+  skill_add_failed_code: { sourceDirectoryPath: string, targetDirectoryPath: string }
   /**
    * 用户取消交互式询问。
    */
   prompt_cancelled_code: undefined
+  /**
+   * 本地没有任何已安装技能。
+   */
+  local_skill_empty_code: undefined
+  /**
+   * 请求的本地技能名不存在。
+   */
+  local_skill_not_found_code: { skillNameList: string[] }
   /**
    * 删除目录失败。
    */
@@ -137,4 +145,4 @@ interface AppErrorParamMap {
  */
 type AppErrorParam<K extends AppErrorCodeType> = AppErrorParamMap[K]
 
-export type { AppErrorOption, AppErrorParam, AppErrorParamMap }
+export type { AppErrorOption, AppErrorParam }

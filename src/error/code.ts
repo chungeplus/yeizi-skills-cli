@@ -91,15 +91,23 @@ const AppErrorCode = {
    */
   SKILL_OPTION_INVALID_FORMAT_CODE: "skill_option_invalid_format_code",
   /**
-   * 技能复制失败。
+   * 技能添加失败。
    */
-  SKILL_COPY_FAILED_CODE: "skill_copy_failed_code",
+  SKILL_ADD_FAILED_CODE: "skill_add_failed_code",
+  /**
+   * 本地没有任何已安装技能。
+   */
+  LOCAL_SKILL_EMPTY_CODE: "local_skill_empty_code",
+  /**
+   * 请求的本地技能名不存在。
+   */
+  LOCAL_SKILL_NOT_FOUND_CODE: "local_skill_not_found_code",
   /**
    * 用户在交互式询问中取消。
    */
   PROMPT_CANCELLED_CODE: "prompt_cancelled_code",
   /**
-   * 删除已下载目录失败。
+   * 删除目录失败。
    */
   DIRECTORY_REMOVE_FAILED_CODE: "directory_remove_failed_code",
   /**

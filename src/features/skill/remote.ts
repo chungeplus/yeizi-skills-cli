@@ -25,12 +25,6 @@ class RemoteSkillService {
 
   /**
    * 加载远端技能列表。
-   *
-   * @throws AppError (AppErrorCode.REMOTE_REPOSITORY_DOWNLOAD_FAILED_CODE) - 当远端仓库下载失败时
-   * @throws AppError (AppErrorCode.REMOTE_SKILL_DIRECTORY_INVALID_CODE) - 当技能子目录读取失败时
-   * @throws AppError (AppErrorCode.REMOTE_SKILL_ENTRY_INVALID_CODE) - 当技能条目解析不通过 `skillEntryFileObjectSchema` 时
-   * @throws AppError (AppErrorCode.REMOTE_SKILL_ENTRY_MISSING_CODE) - 当技能子目录下缺少 `SKILL.md` 时
-   * @throws AppError (AppErrorCode.REMOTE_SKILL_EMPTY_CODE) - 当技能子目录下没有任何技能子目录时
    */
   public static async initRemoteSkill(): Promise<void> {
     if (RemoteSkillService.initRemoteSkillPromise === null) {
@@ -124,11 +118,7 @@ class RemoteSkillService {
    * 校验给定技能名列表是否都存在于远端技能列表中。
    *
    * @param skillNameList - 技能名列表
-   * @throws AppError (AppErrorCode.REMOTE_REPOSITORY_DOWNLOAD_FAILED_CODE) - 当远端仓库下载失败时
-   * @throws AppError (AppErrorCode.REMOTE_SKILL_DIRECTORY_INVALID_CODE) - 当技能子目录读取失败时
-   * @throws AppError (AppErrorCode.REMOTE_SKILL_ENTRY_INVALID_CODE) - 当技能条目解析不通过 `skillEntryFileObjectSchema` 时
-   * @throws AppError (AppErrorCode.REMOTE_SKILL_ENTRY_MISSING_CODE) - 当技能子目录下缺少 `SKILL.md` 时
-   * @throws AppError (AppErrorCode.REMOTE_SKILL_EMPTY_CODE) - 当远端仓库无任何技能时
+   * @throws AppError (AppErrorCode.REMOTE_SKILL_LIST_NOT_LOADED_CODE) - 当远端技能列表未加载时
    * @throws AppError (AppErrorCode.REMOTE_SKILL_NOT_FOUND_CODE) - 当任一技能名不在远端列表中时
    */
   public static async validateSkillNameListExistInRemoteSkillList(skillNameList: string[]): Promise<void> {
@@ -155,11 +145,7 @@ class RemoteSkillService {
    * 读取远端技能列表。
    *
    * @returns 远端技能列表
-   * @throws AppError (AppErrorCode.REMOTE_REPOSITORY_DOWNLOAD_FAILED_CODE) - 当远端仓库下载失败时
-   * @throws AppError (AppErrorCode.REMOTE_SKILL_DIRECTORY_INVALID_CODE) - 当技能子目录读取失败时
-   * @throws AppError (AppErrorCode.REMOTE_SKILL_ENTRY_INVALID_CODE) - 当技能条目解析不通过 `skillEntryFileObjectSchema` 时
-   * @throws AppError (AppErrorCode.REMOTE_SKILL_ENTRY_MISSING_CODE) - 当技能子目录下缺少 `SKILL.md` 时
-   * @throws AppError (AppErrorCode.REMOTE_SKILL_EMPTY_CODE) - 当远端仓库中没有任何技能时
+   * @throws AppError (AppErrorCode.REMOTE_SKILL_LIST_NOT_LOADED_CODE) - 当远端技能列表未加载时
    */
   public static async getRemoteSkillList(): Promise<SkillItem[]> {
     await RemoteSkillService.initRemoteSkill()
@@ -178,6 +164,7 @@ class RemoteSkillService {
     RemoteSkillService.remoteSkillList = undefined
     RemoteSkillService.initRemoteSkillPromise = null
   }
+
 }
 
 export { RemoteSkillService }

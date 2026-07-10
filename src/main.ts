@@ -5,6 +5,7 @@ import process from "node:process"
 import { Command, CommanderError } from "commander"
 import { AddCommand } from "@/commands/add"
 import { ListCommand } from "@/commands/list"
+import { RemoveCommand } from "@/commands/remove"
 import { AppError, AppErrorCode, buildAppErrorFromCommanderError } from "@/error"
 import { renderErrorDisplay } from "@/features/display"
 import { loadPackageJson } from "@/features/json"
@@ -23,9 +24,6 @@ const SILENT_EXIT_APP_ERROR_CODE_LIST: AppErrorCodeType[] = [
  *
  * @returns 构造完成的 Commander Command 实例
  * @throws AppError (AppErrorCode.PACKAGE_BIN_CONFIG_MISSING_CODE) - 当 package.json.bin 为空时
- * @throws AppError (AppErrorCode.PACKAGE_CONFIG_JSON_INVALID_CODE) - 当 package.json 不是合法 JSON 时
- * @throws AppError (AppErrorCode.PACKAGE_CONFIG_SCHEMA_INVALID_CODE) - 当 package.json 结构不符合 schema 时
- * @throws AppError (AppErrorCode.PACKAGE_CONFIG_NOT_FOUND_CODE) - 当 package.json 不存在时
  */
 async function createProgram(): Promise<Command> {
   const packageJsonInfo = await loadPackageJson()
@@ -47,6 +45,7 @@ async function createProgram(): Promise<Command> {
 
   new ListCommand().register(program)
   new AddCommand().register(program)
+  new RemoveCommand().register(program)
 
   return program
 }

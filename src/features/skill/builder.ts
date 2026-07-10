@@ -1,79 +1,74 @@
 import type { PlatformList } from "@/types/platform"
-import type { SkillItem, SkillList } from "@/types/skill"
+import type { SkillItem, SkillList, SkillPlatformItem } from "@/types/skill"
 
 import { readdir } from "node:fs/promises"
 import { AppError, AppErrorCode } from "@/error"
 import { RemoteSkillService } from "./remote"
 
 /**
- * 按技能名列表查对应的 `SkillItem`。
+ * 按技能名列表解析远端对应的 `SkillItem`。
  *
  * @param skillNameList - 技能名列表
  * @returns 技能项列表
- * @throws AppError (AppErrorCode.REMOTE_REPOSITORY_DOWNLOAD_FAILED_CODE) - 当远端仓库下载失败时
- * @throws AppError (AppErrorCode.REMOTE_SKILL_DIRECTORY_INVALID_CODE) - 当远端技能子目录不可读时
- * @throws AppError (AppErrorCode.REMOTE_SKILL_ENTRY_INVALID_CODE) - 当技能条目 frontmatter 不合法时
- * @throws AppError (AppErrorCode.REMOTE_SKILL_ENTRY_MISSING_CODE) - 当技能子目录下缺少 SKILL.md 时
- * @throws AppError (AppErrorCode.REMOTE_SKILL_EMPTY_CODE) - 当远端仓库中没有任何技能时
  * @throws AppError (AppErrorCode.REMOTE_SKILL_NOT_FOUND_CODE) - 当任一技能名不在远端列表中时
  *
  * @example
  * ```typescript
- * const skillList = await buildSkillList(["web", "api"]) // [{ skillName: "web", skillDescription: "前端技能集合" }, { skillName: "api", skillDescription: "接口技能集合" }]
+ * const remoteSkillList = await buildRemoteSkillListBySkillNameList(["web", "api"]) // [{ skillName: "web", skillDescription: "前端技能集合" }, ...]
  * ```
  */
-async function buildSkillList(skillNameList: string[]): Promise<SkillItem[]> {
-  const remoteSkillList = await RemoteSkillService.getRemoteSkillList()
+async function buildRemoteSkillListBySkillNameList(skillNameList: string[]): Promise<SkillItem[]> {
+  const remoteSkillList: SkillList = await RemoteSkillService.getRemoteSkillList()
 
-  const notFoundSkillNameList = skillNameList.filter(skillName =>
-    !remoteSkillList.some(remoteSkillItem => remoteSkillItem.skillName === skillName),
-  )
+  const skillList: SkillItem[] = []
+  const notFoundSkillNameList: string[] = []
+
+  skillNameList.forEach((skillName) => {
+    const matchedSkillItem = remoteSkillList.find(skillItem => skillItem.skillName === skillName)
+
+    if (matchedSkillItem !== undefined) {
+      skillList.push(matchedSkillItem)
+      return
+    }
+
+    notFoundSkillNameList.push(skillName)
+  })
 
   if (notFoundSkillNameList.length > 0) {
     throw new AppError(AppErrorCode.REMOTE_SKILL_NOT_FOUND_CODE, {
-      param: { skillNameList: notFoundSkillNameList },
+      param: {
+        skillNameList: notFoundSkillNameList,
+      },
     })
   }
-
-  const skillList: SkillItem[] = []
-
-  skillNameList.forEach((skillName) => {
-    const skillItem = remoteSkillList.find(remoteSkillItem => remoteSkillItem.skillName === skillName)
-
-    if (skillItem === undefined) {
-      throw new AppError(AppErrorCode.REMOTE_SKILL_NOT_FOUND_CODE, {
-        param: { skillNameList: [skillName] },
-      })
-    }
-
-    skillList.push(skillItem)
-  })
 
   return skillList
 }
 
 /**
- * 按技能列表与平台列表生成「技能 → 已添加平台」表格行。任一平台都不包含该技能时该技能不出现在结果中。
+ * 按技能列表与平台列表生成已添加到至少一个平台的「技能 → 已添加平台」列表。
  *
  * @param skillList - 技能列表
  * @param platformList - 平台列表
- * @returns 表格行列表（不含表头）
- * @throws AppError (AppErrorCode.PLATFORM_SKILL_DIRECTORY_INVALID_CODE) - 当目录读取失败时
+ * @returns 已添加的技能-平台列表
  *
  * @example
  * ```typescript
- * const rowList = await buildAddedSkillPlatformTableRowList(skillList, platformList) // [["web", "codex"], ["api", "claude"]]
+ * const addedSkillPlatformList = await buildAddedSkillPlatformList(skillList, platformList)
+ * // [{ skillName: "web", addedPlatformNameList: ["cursor", "windsurf"] }, { skillName: "api", addedPlatformNameList: ["cursor"] }]
  * ```
  */
-async function buildAddedSkillPlatformTableRowList(
+async function buildAddedSkillPlatformList(
   skillList: SkillList,
   platformList: PlatformList,
-): Promise<string[][]> {
-  const platformAddedSkillNameEntryList = await Promise.all(
+): Promise<SkillPlatformItem[]> {
+  const skillPlatformNameMap: Record<string, string[]> = {}
+
+  await Promise.all(
     platformList.map(async ({ platformSkillDirectoryPath, platformName }) => {
-      let platformDirectoryEntryList
+      let directoryEntryList
       try {
-        platformDirectoryEntryList = await readdir(platformSkillDirectoryPath, { withFileTypes: true })
+        directoryEntryList = await readdir(platformSkillDirectoryPath, { withFileTypes: true })
       }
       catch (error) {
         if (error instanceof Error) {
@@ -83,35 +78,30 @@ async function buildAddedSkillPlatformTableRowList(
         }
         throw error
       }
-      const addedSkillNameList = platformDirectoryEntryList
+
+      const addedSkillNameList = directoryEntryList
         .filter(directoryEntryItem => directoryEntryItem.isDirectory())
         .map(({ name }) => name)
+        .filter(directoryName => skillList.some(skillItem => skillItem.skillName === directoryName))
 
-      return {
-        platformName,
-        addedSkillNameList,
-      }
+      addedSkillNameList.forEach((skillName) => {
+        if (skillPlatformNameMap[skillName] === undefined) {
+          skillPlatformNameMap[skillName] = []
+        }
+        skillPlatformNameMap[skillName].push(platformName)
+      })
     }),
   )
 
-  const addedSkillPlatformTableRowList: string[][] = []
-
-  skillList.forEach(({ skillName }) => {
-    const addedPlatformNameList = platformAddedSkillNameEntryList
-      .filter(({ addedSkillNameList }) => addedSkillNameList.includes(skillName))
-      .map(({ platformName }) => platformName)
-
-    if (addedPlatformNameList.length === 0) {
-      return
-    }
-
-    addedSkillPlatformTableRowList.push([skillName, addedPlatformNameList.join(", ")])
-  })
-
-  return addedSkillPlatformTableRowList
+  return skillList
+    .map(({ skillName }) => ({
+      skillName,
+      addedPlatformNameList: skillPlatformNameMap[skillName] ?? [],
+    }))
+    .filter(({ addedPlatformNameList }) => addedPlatformNameList.length > 0)
 }
 
 export {
-  buildAddedSkillPlatformTableRowList,
-  buildSkillList,
+  buildAddedSkillPlatformList,
+  buildRemoteSkillListBySkillNameList,
 }

@@ -16,8 +16,6 @@ class LocalPlatformService {
 
   /**
    * 探测本地平台目录。
-   *
-   * @throws AppError (AppErrorCode.PLATFORM_NOT_FOUND_CODE) - 配置平台均不可访问时
    */
   public static async initLocalPlatform(): Promise<void> {
     if (LocalPlatformService.initLocalPlatformPromise === null) {
@@ -89,7 +87,7 @@ class LocalPlatformService {
    * 读取本地平台列表。
    *
    * @returns 平台列表
-   * @throws AppError (AppErrorCode.PLATFORM_NOT_FOUND_CODE) - 当配置平台均不可访问时
+   * @throws AppError (AppErrorCode.LOCAL_PLATFORM_LIST_NOT_LOADED_CODE) - 当本地平台列表未加载时
    */
   public static async getLocalPlatformList(): Promise<PlatformItem[]> {
     await LocalPlatformService.initLocalPlatform()

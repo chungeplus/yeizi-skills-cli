@@ -218,15 +218,15 @@ const appErrorDefinitionMap: AppErrorDefinitionMap = {
       return `技能选项"${appErrorParam.rawSkillNameText}"格式不正确，应类似 yeizi-skill 或 yeizi-skill-1,yeizi-skill-2（多个技能用英文逗号分隔）。`
     },
   },
-  [AppErrorCode.SKILL_COPY_FAILED_CODE]: {
-    appErrorTitle: "技能复制失败",
+  [AppErrorCode.SKILL_ADD_FAILED_CODE]: {
+    appErrorTitle: "技能添加失败",
     buildAppErrorMessage(appErrorParam): string {
       if (appErrorParam === undefined) {
         throw new AppError(AppErrorCode.APP_ERROR_PARAM_MISSING_CODE, {
-          param: { appErrorCode: AppErrorCode.SKILL_COPY_FAILED_CODE },
+          param: { appErrorCode: AppErrorCode.SKILL_ADD_FAILED_CODE },
         })
       }
-      return `从"${appErrorParam.sourceDirectoryPath}"复制到"${appErrorParam.targetDirectoryPath}"失败。`
+      return `从"${appErrorParam.sourceDirectoryPath}"添加到"${appErrorParam.targetDirectoryPath}"失败。`
     },
   },
   [AppErrorCode.DIRECTORY_REMOVE_FAILED_CODE]: {
@@ -237,13 +237,36 @@ const appErrorDefinitionMap: AppErrorDefinitionMap = {
           param: { appErrorCode: AppErrorCode.DIRECTORY_REMOVE_FAILED_CODE },
         })
       }
-      return `删除临时目录"${appErrorParam.directoryPath}"失败。`
+      return `删除目录"${appErrorParam.directoryPath}"失败。`
     },
   },
   [AppErrorCode.PROMPT_CANCELLED_CODE]: {
     appErrorTitle: "已取消操作",
     buildAppErrorMessage(): string {
       return "已取消本次操作。"
+    },
+  },
+  [AppErrorCode.LOCAL_SKILL_EMPTY_CODE]: {
+    appErrorTitle: "本地技能为空",
+    buildAppErrorMessage(): string {
+      return "当前本地平台上没有已安装的技能。"
+    },
+  },
+  [AppErrorCode.LOCAL_SKILL_NOT_FOUND_CODE]: {
+    appErrorTitle: "本地技能不存在",
+    buildAppErrorMessage(appErrorParam): string {
+      if (appErrorParam === undefined) {
+        throw new AppError(AppErrorCode.APP_ERROR_PARAM_MISSING_CODE, {
+          param: { appErrorCode: AppErrorCode.LOCAL_SKILL_NOT_FOUND_CODE },
+        })
+      }
+      const skillNameList = appErrorParam.skillNameList
+
+      if (skillNameList.length === 1) {
+        return `技能"${skillNameList[0]}"未在本地添加。`
+      }
+
+      return `以下技能未在本地添加：${skillNameList.join("、")}。`
     },
   },
   [AppErrorCode.REMOTE_REPOSITORY_NOT_LOADED_CODE]: {

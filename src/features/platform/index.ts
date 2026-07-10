@@ -1,3 +1,2 @@
-export { buildPlatformList } from "./builder"
+export { buildPlatformListByPlatformNameList } from "./builder"
 export { LocalPlatformService } from "./local"
-export { promptPlatformNameList } from "./prompt"

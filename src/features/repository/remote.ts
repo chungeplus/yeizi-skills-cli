@@ -22,8 +22,6 @@ class RemoteRepositoryService {
 
   /**
    * 下载远端仓库到本地临时目录。
-   *
-   * @throws AppError (AppErrorCode.REMOTE_REPOSITORY_DOWNLOAD_FAILED_CODE) - 当远端仓库下载失败时
    */
   public static async initRemoteRepository(): Promise<void> {
     if (RemoteRepositoryService.initRemoteRepositoryPromise === null) {
@@ -95,7 +93,7 @@ class RemoteRepositoryService {
    * 读取远端仓库本地目录绝对路径。
    *
    * @returns 仓库本地目录绝对路径
-   * @throws AppError (AppErrorCode.REMOTE_REPOSITORY_DOWNLOAD_FAILED_CODE) - 当远端仓库下载失败时
+   * @throws AppError (AppErrorCode.REMOTE_REPOSITORY_NOT_LOADED_CODE) - 当远端仓库未加载时
    */
   public static async getLocalRepositoryDirectoryPath(): Promise<string> {
     await RemoteRepositoryService.initRemoteRepository()
@@ -111,7 +109,7 @@ class RemoteRepositoryService {
    * 读取远端仓库中技能子目录的绝对路径。
    *
    * @returns 技能子目录绝对路径
-   * @throws AppError (AppErrorCode.REMOTE_REPOSITORY_DOWNLOAD_FAILED_CODE) - 当远端仓库下载失败时
+   * @throws AppError (AppErrorCode.REMOTE_REPOSITORY_NOT_LOADED_CODE) - 当远端仓库未加载时
    */
   public static async getLocalRepositorySkillDirectoryPath(): Promise<string> {
     await RemoteRepositoryService.initRemoteRepository()
