@@ -50,7 +50,9 @@ class RemoveCommand {
 
     const addedSkillPlatformList = await buildAddedSkillPlatformList(remoteSkillList, localPlatformList)
 
-    const addedSkillList = await buildRemoteSkillListBySkillNameList(Object.keys(addedSkillPlatformList))
+    const addedSkillList = await buildRemoteSkillListBySkillNameList(
+      addedSkillPlatformList.map(({ skillName }) => skillName),
+    )
 
     const HINT_MAX_DISPLAY_WIDTH = 80
 
