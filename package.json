@@ -19,13 +19,14 @@
     "cli"
   ],
   "bin": {
-    "mingto-skills": "dist/index.js"
+    "mingto-skills": "bin/cli.ts"
   },
   "publishConfig": {
     "access": "public"
   },
   "files": [
     "README.md",
+    "bin",
     "dist"
   ],
   "engines": {

@@ -4,7 +4,7 @@ async function runBuild(): Promise<void> {
   await Bun.$`rm -rf dist`
 
   const buildResult = await Bun.build({
-    entrypoints: ["./src/bin/cli.ts"],
+    entrypoints: ["./bin/cli.ts"],
     outdir: "./dist",
     naming: "index.[ext]",
     target: "node",

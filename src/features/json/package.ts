@@ -17,12 +17,14 @@ import { packageJsonSchema } from "@/schemas/json"
  *
  * @example
  * ```typescript
- * const packageJson = await loadPackageJson() // { bin: { "mingto-skills": "dist/index.js" }, description: "mingto-skills CLI", version: "0.1.1" }
+ * const packageJson = await loadPackageJson() // { bin: { "mingto-skills": "bin/cli.ts" }, description: "mingto-skills CLI", version: "0.1.1" }
  * ```
  */
 async function loadPackageJson(): Promise<PackageJson> {
   const packageJsonPath = resolve(
     dirname(fileURLToPath(import.meta.url)),
+    "..",
+    "..",
     "..",
     "package.json",
   )
