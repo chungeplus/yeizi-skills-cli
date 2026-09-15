@@ -5,13 +5,17 @@ import type { RemoteRepositoryConfig } from "@/types/repository"
  */
 const remoteRepositoryConfig: RemoteRepositoryConfig = {
   /**
-   * 远端仓库所有者。
+   * 远端仓库服务基础地址。
    */
-  remoteRepositoryOwner: "chungeplus",
+  remoteRepositoryBaseUrl: "http://git.mingto.net",
+  /**
+   * 远端仓库所有者（命名空间）。
+   */
+  remoteRepositoryOwner: "hcc",
   /**
    * 远端仓库名称。
    */
-  remoteRepositoryName: "yeizi-skills",
+  remoteRepositoryName: "mt-utils",
   /**
    * 远端仓库分支。
    */

@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "yeizi-skills",
+      "name": "mingto-skills",
       "dependencies": {
         "@clack/prompts": "^1.7.0",
         "commander": "^14.0.0",

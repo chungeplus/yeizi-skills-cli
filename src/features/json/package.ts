@@ -17,7 +17,7 @@ import { packageJsonSchema } from "@/schemas/json"
  *
  * @example
  * ```typescript
- * const packageJson = await loadPackageJson() // { bin: { "yeizi-skills": "dist/index.js" }, description: "yeizi-skills CLI", version: "0.1.1" }
+ * const packageJson = await loadPackageJson() // { bin: { "mingto-skills": "dist/index.js" }, description: "mingto-skills CLI", version: "0.1.1" }
  * ```
  */
 async function loadPackageJson(): Promise<PackageJson> {

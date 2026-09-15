@@ -48,7 +48,7 @@ class RemoteRepositoryService {
   private static async loadLocalRepositoryDirectoryPath(): Promise<string> {
     const loadSpinner = spinner()
     loadSpinner.start("拉取远程仓库中")
-    const tempDirectoryPath = await mkdtemp(join(tmpdir(), "yeizi-skills-repo-"))
+    const tempDirectoryPath = await mkdtemp(join(tmpdir(), "mingto-skills-repo-"))
 
     try {
       const downloadResult = await downloadTemplate(RemoteRepositoryService.getRemoteRepositoryRequestPath(), {
@@ -75,18 +75,19 @@ class RemoteRepositoryService {
   }
 
   /**
-   * 获取仓库源地址。
+   * 获取仓库源地址（GitLab 归档压缩包直链，giget 解压时会自动剥掉顶层目录）。
    *
    * @returns 仓库源地址
    */
   private static getRemoteRepositoryRequestPath(): string {
     const {
+      remoteRepositoryBaseUrl,
       remoteRepositoryOwner,
       remoteRepositoryName,
       remoteRepositoryBranch,
     } = RemoteRepositoryService.remoteRepositoryConfig
 
-    return `gh:${remoteRepositoryOwner}/${remoteRepositoryName}#${remoteRepositoryBranch}`
+    return `${remoteRepositoryBaseUrl}/${remoteRepositoryOwner}/${remoteRepositoryName}/-/archive/${remoteRepositoryBranch}/${remoteRepositoryName}-${remoteRepositoryBranch}.tar.gz`
   }
 
   /**

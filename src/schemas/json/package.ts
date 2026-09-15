@@ -5,7 +5,7 @@ import { z } from "zod"
  *
  * @example
  * ```typescript
- * const packageJson = packageJsonSchema.parse({ bin: { "yeizi-skills": "dist/index.js" }, description: "yeizi-skills CLI", version: "0.1.1" }) // { bin: { "yeizi-skills": "dist/index.js" }, description: "yeizi-skills CLI", version: "0.1.1" }
+ * const packageJson = packageJsonSchema.parse({ bin: { "mingto-skills": "dist/index.js" }, description: "mingto-skills CLI", version: "0.1.1" }) // { bin: { "mingto-skills": "dist/index.js" }, description: "mingto-skills CLI", version: "0.1.1" }
  * ```
  */
 const packageJsonSchema = z.object({

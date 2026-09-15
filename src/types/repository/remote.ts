@@ -3,7 +3,12 @@
  */
 interface RemoteRepositoryConfig {
   /**
-   * 远端仓库所有者。
+   * 远端仓库服务基础地址。
+   */
+  remoteRepositoryBaseUrl: string
+
+  /**
+   * 远端仓库所有者（命名空间）。
    */
   remoteRepositoryOwner: string
 

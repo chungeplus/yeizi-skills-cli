@@ -41,7 +41,7 @@ class RemoveCommand {
    *
    * @example
    * ```typescript
-   * const skillNameList = await this.promptRemoveSkillNameList()   // ["yeizi-demo","yeizi-self"]
+   * const skillNameList = await this.promptRemoveSkillNameList()   // ["mingto-mt-ui"]
    * ```
    */
   private async promptRemoveSkillNameList(): Promise<string[]> {
@@ -88,7 +88,7 @@ class RemoveCommand {
    */
   public async execute(removeCommandOption: RemoveCommandOption): Promise<void> {
     try {
-      intro(picocolors.inverse(" yeizi-skills "))
+      intro(picocolors.inverse(" mingto-skills "))
 
       await RemoteRepositoryService.initRemoteRepository()
 

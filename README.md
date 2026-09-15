@@ -1,9 +1,9 @@
-# yeizi-skills
+# mingto-skills
 
-将 [yeizi-skills](https://github.com/chungeplus/yeizi-skills) 仓库中的技能同步到本地平台的技能目录。
+将 [mt-utils](http://git.mingto.net/hcc/mt-utils) 仓库中的技能同步到本地平台的技能目录。
 
 ```bash
-npx yeizi-skills
+npx mingto-skills
 ```
 
 ## 支持平台
@@ -16,11 +16,11 @@ npx yeizi-skills
 
 ## 命令参考
 
-### `npx yeizi-skills list`
+### `npx mingto-skills list`
 
 查看本地平台已添加的技能列表。
 
-### `npx yeizi-skills add`
+### `npx mingto-skills add`
 
 安装技能至本地平台。
 
@@ -28,7 +28,7 @@ npx yeizi-skills
 | --------- | --------- | -------------- |
 | `--skill` | 技能列表，逗号分隔 | 否 |
 
-### `npx yeizi-skills remove`
+### `npx mingto-skills remove`
 
 从本地平台目录移除指定技能。
 

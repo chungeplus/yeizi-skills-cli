@@ -57,7 +57,7 @@ class ListCommand {
    */
   public async execute(_listCommandOption: ListCommandOption): Promise<void> {
     try {
-      intro(picocolors.inverse(" yeizi-skills "))
+      intro(picocolors.inverse(" mingto-skills "))
 
       await RemoteRepositoryService.initRemoteRepository()
 

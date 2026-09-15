@@ -46,7 +46,7 @@ class AddCommand {
    *
    * @example
    * ```typescript
-   * const skillNameList = await this.promptAddSkillNameList()   // ["yeizi-demo","yeizi-self"]
+   * const skillNameList = await this.promptAddSkillNameList()   // ["mingto-mt-ui"]
    * ```
    */
   private async promptAddSkillNameList(): Promise<string[]> {
@@ -117,7 +117,7 @@ class AddCommand {
    */
   public async execute(addCommandOption: AddCommandOption): Promise<void> {
     try {
-      intro(picocolors.inverse(" yeizi-skills "))
+      intro(picocolors.inverse(" mingto-skills "))
 
       await RemoteRepositoryService.initRemoteRepository()
 

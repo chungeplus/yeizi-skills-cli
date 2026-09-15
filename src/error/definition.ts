@@ -215,7 +215,7 @@ const appErrorDefinitionMap: AppErrorDefinitionMap = {
           param: { appErrorCode: AppErrorCode.SKILL_OPTION_INVALID_FORMAT_CODE },
         })
       }
-      return `技能选项"${appErrorParam.rawSkillNameText}"格式不正确，应类似 yeizi-skill 或 yeizi-skill-1,yeizi-skill-2（多个技能用英文逗号分隔）。`
+      return `技能选项"${appErrorParam.rawSkillNameText}"格式不正确，应类似 mingto-mt-ui 或 mingto-mt-ui-1,mingto-mt-ui-2（多个技能用英文逗号分隔）。`
     },
   },
   [AppErrorCode.SKILL_ADD_FAILED_CODE]: {

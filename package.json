@@ -1,25 +1,25 @@
 {
-  "name": "yeizi-skills",
+  "name": "mingto-skills",
   "type": "module",
   "version": "0.1.7",
   "packageManager": "bun@1.3.14",
-  "description": "CLI for managing yeizi skills.",
-  "author": "yeizi",
+  "description": "CLI for managing mingto skills.",
+  "author": "mingto",
   "license": "MIT",
-  "homepage": "https://github.com/chungeplus/yeizi-skills-cli#readme",
+  "homepage": "http://git.mingto.net/hcc/mingto-skills#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chungeplus/yeizi-skills-cli.git"
+    "url": "git+http://git.mingto.net/hcc/mingto-skills.git"
   },
   "bugs": {
-    "url": "https://github.com/chungeplus/yeizi-skills-cli/issues"
+    "url": "http://git.mingto.net/hcc/mingto-skills/-/issues"
   },
   "keywords": [
     "skill",
     "cli"
   ],
   "bin": {
-    "yeizi-skills": "dist/index.js"
+    "mingto-skills": "dist/index.js"
   },
   "publishConfig": {
     "access": "public"
